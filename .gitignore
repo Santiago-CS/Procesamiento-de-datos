@@ -1,0 +1,17 @@
+# Ignore any directory whose name ends with " - Clase" or " - ClaseGuia"
+**/* - Clase/
+**/* - ClaseGuia/
+**/* - Clase Guía/
+**/Material_*
+**/Ejercicios_*
+**/Soluciones_*
+**/Tareas_*
+**/Examenes_*
+**/Proyectos_*
+**/Recursos_*
+**/Notas_*
+**/Apuntes_*
+**/Presentaciones_*
+**/Docs_*
+**/Documentos_*
+**/Actividades
