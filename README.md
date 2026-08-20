@@ -3,7 +3,7 @@
 Esta materia proporciona los fundamentos teóricos y prácticos para el procesamiento de datos con python, una etapa crítica en todo proyecto de ciencia de datos y aprendizaje automático. El curso está diseñado para que el estudiante desarrolle habilidades para identificar, transformar, crear y seleccionar características relevantes a partir de datos crudos, con el objetivo de mejorar el desempeño de los modelos predictivos.
 
 ### `Temario`
-`Módulo 1.` **Extracción de datos de diferentes fuentes**
+`Unidad 1.` **Extracción de datos de diferentes fuentes**
 
    1. Extracción de datos de archivos de texto
    2. Extracción de datos de archivos CSV
@@ -16,14 +16,14 @@ Esta materia proporciona los fundamentos teóricos y prácticos para el procesam
       2. Análisis de componentes
       3. Reescalamiento
 
-`Módulo 2.` **Comprensión de los datos**
+`Unidad 2.` **Comprensión de los datos**
 
    1. Clasificación de tipos de datos (datos categóricos y cuantitativos)
    2. Valores perdidos
    3. Valores atípicos
    4. Rango de valores
    
-`Módulo 3.`  **Limpieza y transformación de datos**
+`Unidad 3.`  **Limpieza y transformación de datos**
 
    1. Tratamiento de datos perdidos
    2. Selección de características
@@ -31,17 +31,17 @@ Esta materia proporciona los fundamentos teóricos y prácticos para el procesam
    4. Normalización de datos
    5. Generación de datos
    
-`Módulo 4.`  **Construcción de características**
+`Unidad 4.`  **Construcción de características**
 
    1. Codificación de variables categóricas nominales
    2. Codificación de variables categóricas ordinales
    3. Creación de variables polinomiales, dummies y WOE's
    
-`Módulo 5.`  **Selección de características**
+`Unidad 5.`  **Selección de características**
 
    1. Selección de características (varianza y correlación)
    2. Análisis de discriminante lineal
    
-`Módulo 6.`  **Transformación de características**
+`Unidad 6.`  **Transformación de características**
 
    1. Análisis de componentes principales
