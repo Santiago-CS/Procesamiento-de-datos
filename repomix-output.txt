@@ -1,0 +1,5321 @@
+
+======================================================================
+ARCHIVO: .\3.1.- Tratamiento de Datos Perdidos.ipynb
+======================================================================
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div style=\"background: linear-gradient(120deg, #1a3a5c 0%, #2d6a9f 60%, #4a9eda 100%); padding: 28px 36px; border-radius: 14px; display: flex; align-items: center; gap: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.18);\">\n",
+    "    <img src='Figures/iteso.jpg' style=\"height: 110px; border-radius: 8px; background: white; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);\"/>\n",
+    "    <div style=\"border-left: 2px solid rgba(255,255,255,0.4); padding-left: 28px;\">\n",
+    "        <h1 style=\"margin: 0 0 8px 0; color: white; font-size: 1.5em; line-height: 1.3;\">Ingeniería y Ciencia de Datos</h1>\n",
+    "        <h3 style=\"margin: 0 0 8px 0; color: white; font-size: 1.5em; line-height: 1.3;\">Laboratorio de Procesamiento de Datos</h3>\n",
+    "        <h3 style=\"margin: 0; color: rgba(255,255,255,0.8); font-weight: normal; font-size: 1.05em;\">Módulo 2: Tratamiento de datos perdidos</h3>\n",
+    "    </div>\n",
+    "</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> Los datos faltantes no son simplemente \"huecos\" que rellenar o eliminar, son señales informativas cuyo mecanismo de generación condiciona la validez estadística y el rendimiento predictivo de algún modelo de ML.\n",
+    "\n",
+    "> Los datos faltantes pueden imputarse, pero una imputación inadecuada destruye la varianza, distorsiona las correlaciones y puede introducir sesgos irreparables.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Flujo de Tratamiento de datos Faltantes\n",
+    "\n",
+    "\n",
+    "```mermaid\n",
+    "flowchart TD\n",
+    "    A[Diagnóstico y Visualización de Nulidad] --> B[Identificación del Mecanismo: MCAR / MAR / MNAR]\n",
+    "    B --> C{¿Porcentaje de Faltantes y Patrón?}\n",
+    "    C -->|Muy alto / Irrelevante| D[Eliminación / Filtrado por Umbral]\n",
+    "    C -->|Bajo / Univariado / Rápido| E[Imputación Univariada + Missing Indicator]\n",
+    "    C -->|Datos Temporales / Ordenados| F[Forward/Backward Fill e Interpolación]\n",
+    "    C -->|Relaciones Multivariadas Fuertes| G[Modelos Predictivos: KNN / MICE / MissForest]\n",
+    "    D & E & F & G --> H[Validación de Distribuciones y Evaluación en Pipeline ML]\n",
+    "```\n",
+    "\n",
+    "#### ¿Por qué los datos faltantes son un reto crítico en Ciencia de Datos?\n",
+    "\n",
+    "1. **Incompatibilidad algorítmica:** La mayoría de los algoritmos de Machine Learning (`scikit-learn`, `statsmodels`, redes neuronales) no admiten matrices con `NaN`.\n",
+    "2. **Pérdida de potencia estadística:** La eliminación ingenua reduce el tamaño muestral efectivo ($N$), ensanchando los intervalos de confianza.\n",
+    "3. **Distorsión de la varianza y covarianza:** Asignar un valor constante a todos los faltantes concentra artificialmente la masa probabilística, reduciendo la varianza estimada y sobreestimando o alterando correlaciones.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Diagnóstico y Visualización de Datos Faltantes\n",
+    "\n",
+    "Antes de elegir cualquier tratamiento, el primer paso en el flujo de ingeniería de características es **diagnosticar**:\n",
+    "- ¿Cuántos datos faltan en cada variable (conteo y porcentaje)?\n",
+    "- ¿Se concentran los faltantes en observaciones específicas o en variables específicas?\n",
+    "- ¿Existe un patrón sistemático de ausencia o co-ocurrencia entre columnas?\n",
+    "\n",
+    "### Diagnóstico tabular con `pandas`\n",
+    "La combinación de `.isna()`, `.sum()` y cálculos porcentuales permite construir una tabla resumen de nulidad."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "import numpy as np\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 436
+    },
+    "executionInfo": {
+     "elapsed": 1695,
+     "status": "ok",
+     "timestamp": 1676423709019,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "fz8HGKryK00p",
+    "outputId": "b1078bb1-3900-4e7a-88bd-9e11494e8711"
+   },
+   "outputs": [],
+   "source": [
+    "df=pd.read_csv('Data/API_SI.POV.DDAY_DS2.csv',encoding='latin-1',sep='\\t')\n",
+    "df.head(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 235
+    },
+    "executionInfo": {
+     "elapsed": 8,
+     "status": "ok",
+     "timestamp": 1676423709019,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "8gydVlbSLSkg",
+    "outputId": "6630dbbe-211b-410f-b9ce-1e984f9604ee",
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Tabla resumen de valores faltantes por columna\n",
+    "resumen_faltantes = pd.DataFrame({\n",
+    "    'Total Faltantes': df.isna().sum(),\n",
+    "    'Porcentaje Faltantes (%)': (df.isna().mean() * 100).round(2),\n",
+    "    'Tipo de Dato': df.dtypes\n",
+    "})\n",
+    "resumen_faltantes = resumen_faltantes[resumen_faltantes['Total Faltantes'] > 0].sort_values(by='Porcentaje Faltantes (%)', ascending=False)\n",
+    "print(f\"Dimensiones del dataset: {df.shape[0]} filas x {df.shape[1]} columnas\")\n",
+    "resumen_faltantes.head(15)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 883
+    },
+    "executionInfo": {
+     "elapsed": 347,
+     "status": "ok",
+     "timestamp": 1676423709362,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "IHCEc5X28cVY",
+    "outputId": "08c8a869-a688-4135-d45d-ffd7e19e33b0",
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Visualización de la matriz booleana de faltantes con imshow\n",
+    "dfcopy = df.isna()\n",
+    "\n",
+    "plt.figure(figsize=(6, 4))\n",
+    "plt.imshow(dfcopy, cmap='Blues', aspect='auto')\n",
+    "plt.colorbar(label='¿Es Faltante? (1 = Sí / Azul, 0 = No / Blanco)')\n",
+    "plt.title('Matriz de Datos Faltantes (API_SI.POV.DDAY_DS2)', fontsize=13)\n",
+    "plt.xlabel('Índice de Columna')\n",
+    "plt.ylabel('Índice de Fila (Observación)')\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Visualización Especializada con `missingno`\n",
+    "\n",
+    "La librería `missingno` proporciona un conjunto de herramientas gráficas diseñadas específicamente para diagnosticar el comportamiento y la correlación entre valores faltantes:\n",
+    "\n",
+    "1. **`msno.bar`**: Muestra la proporción de datos presentes por variable y el conteo absoluto en el eje superior.\n",
+    "2. **`msno.matrix`**: Mapa visual de la matriz completa con un indicador lateral (*sparkline*) que muestra la completitud de cada fila (mínimo y máximo de columnas presentes por observación)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Instalación de missingno si es necesario\n",
+    "#!pip install missingno"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Visualización de datos faltantes con missingno\n",
+    "import missingno as msno"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "titanic_df = sns.load_dataset('titanic')\n",
+    "titanic_df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Bar plot \n",
+    "msno.bar(titanic_df, color='steelblue')\n",
+    "#color='steelblue')\n",
+    "#color=\"tomato\")\n",
+    "#color=\"tab:green\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "msno.matrix(titanic_df)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Clasificación de Datos Faltantes (Taxonomía de Rubin, 1976)\n",
+    "\n",
+    "Donald Rubin (1976) formalizó matemáticamente los mecanismos generadores de datos faltantes.\n",
+    "\n",
+    "Sea $Y = (Y_{\\text{obs}}, Y_{\\text{mis}})$ la matriz de datos completa, donde $Y_{\\text{obs}}$ representa los valores observados y $Y_{\\text{mis}}$ los valores ausentes. Definimos la **matriz indicadora de ausencia** $M$ con elementos:\n",
+    "\n",
+    "$$\n",
+    "M_{ij} = \\begin{cases} 1 & \\text{si } Y_{ij} \\text{ es faltante (NaN)} \\\\ 0 & \\text{si } Y_{ij} \\text{ es observado} \\end{cases}\n",
+    "$$\n",
+    "\n",
+    "El comportamiento de $M$ define los tres mecanismos fundamentales:\n",
+    "\n",
+    "```mermaid\n",
+    "flowchart TD\n",
+    "    A[Mecanismos de Pérdida] --> B[MCAR<br/>Completamente al Azar]\n",
+    "    A --> C[MAR<br/>Al Azar]\n",
+    "    A --> D[MNAR<br/>No al Azar]\n",
+    "\n",
+    "    \n",
+    "    B --> B1[No depende de nada observado ni no observado]\n",
+    "\n",
+    "    C --> C1[Depende solo de lo observado<br/>ej. edad predice ingreso]\n",
+    "\n",
+    "    D --> D1[Depende del propio valor no observado<br/>ej. salario alto se oculta]\n",
+    "\n",
+    "    style B fill:#c8e6c9,stroke:#2e7d32\n",
+    "    style C fill:#fff9c4,stroke:#f9a825\n",
+    "    style D fill:#ffcdd2,stroke:#c62828\n",
+    "```\n",
+    "\n",
+    "<img src=\"Figures/tipo_faltante.png\" width=\"550\" style=\"display: block; margin: auto; border-radius: 8px;\">\n",
+    "\n",
+    "En general conviene tratar la clasificación como una **hipótesis de trabajo**: se parte de MCAR como caso más simple, se busca evidencia de dependencia con variables observadas (MAR) y, si ni así se explica el patrón, se considera MNAR.\n",
+    "\n",
+    "### ¿Cómo distinguirlos en la práctica?\n",
+    "\n",
+    "La taxonomía es un modelo teórico sobre el **mecanismo generador** de la ausencia, no una propiedad que se lea directamente en una columna. En la práctica se infiere combinando tres fuentes de evidencia:\n",
+    "\n",
+    "1. **Conocimiento del dominio:** ¿Por qué razón física, operativa o humana podría faltar este dato? (falla de equipo, política de captura, comportamiento del respondiente).\n",
+    "2. **Evidencia estadística:** ¿La ausencia de una variable se correlaciona con otras variables observadas?.\n",
+    "3. **Imposibilidad de prueba directa para MNAR:** No existe un test que confirme MNAR usando solo los datos disponibles, porque por definición depende del valor no observado, se sostiene con argumentos de dominio y, si es posible, con datos externos de validación."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 1. MCAR (Missing Completely at Random)\n",
+    "\n",
+    "**Definición:** La probabilidad de que un valor falte es totalmente independiente de los valores observados y de los valores ausentes. Los datos observados son una submuestra aleatoria simple de la población original.\n",
+    "\n",
+    "**Propiedades clave:**\n",
+    "- Eliminar filas incompletas (*listwise deletion*) **no introduce sesgo** en las medias ni en los coeficientes de regresión, pero reduce la potencia estadística ($N$ menor).\n",
+    "- La imputación por media/mediana preserva la media muestral, pero contrae la varianza.\n",
+    "\n",
+    "**Ejemplos en la vida real:**\n",
+    "1. Un tubo de ensayo se rompe accidentalmente en el laboratorio.\n",
+    "2. Pérdida aleatoria de paquetes de red en un sensor IoT.\n",
+    "3. Un encuestado salta una página entera por descuido físico.\n",
+    "\n",
+    "4. **Manufactura:** Un sensor de temperatura en una línea de producción falla intermitentemente por una soldadura defectuosa, sin relación con la temperatura real medida ni con ninguna otra variable del proceso.\n",
+    "5. **Retail:** Un lector de código de barras en punto de venta falla de forma esporádica por suciedad en el lente, independientemente del producto, precio o sucursal.\n",
+    "6. **Salud:** Se extravía una muestra de sangre en el laboratorio clínico por un error administrativo de etiquetado, sin relación con el estado de salud del paciente.\n",
+    "\n",
+    "> En la práctica, MCAR puro es poco frecuente en datos observacionales (encuestas, sistemas administrativos); es más común en fallas técnicas o de captura completamente ajenas al fenómeno medido."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Ejemplo MCAR: Simulación\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "\n",
+    "np.random.seed(42)\n",
+    "data = pd.DataFrame({\n",
+    "    'edad': np.random.randint(20, 60, 100),\n",
+    "    'ingreso': np.random.randint(20000, 80000, 100)\n",
+    "})\n",
+    "# Introducimos valores faltantes aleatoriamente (MCAR)\n",
+    "mask = np.random.rand(*data.shape) < 0.1\n",
+    "data_mcar = data.mask(mask)\n",
+    "print('Datos con valores faltantes MCAR:')\n",
+    "print(data_mcar.head())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 2. MAR (Missing At Random)\n",
+    "\n",
+    "**Definición:** La probabilidad de que un dato esté ausente depende de otras variables observadas en el dataset, pero condicional a esas variables, la ausencia no depende del valor que falta.\n",
+    "\n",
+    ">  A pesar de llamarse \"aleatorio\", **no es aleatorio simple**. Es aleatorio *condicional* a las variables observadas.\n",
+    "\n",
+    "**Propiedades clave:**\n",
+    "- La eliminación de casos completos (*listwise deletion*) **introduce sesgo**.\n",
+    "\n",
+    "**Ejemplos:**\n",
+    "1. En encuestas de salud, los pacientes de mayor edad omiten con mayor frecuencia preguntas sobre ingresos económicos; pero dentro del mismo grupo de edad, la omisión es aleatoria.\n",
+    "2. En el dataset *Titanic*, la probabilidad de que falte `Age` es mucho mayor para pasajeros de 3ra clase (`Pclass = 3`) que para los de 1ra clase.\n",
+    "\n",
+    "3. **Recursos Humanos:** los empleados con contrato de medio tiempo (variable observada) no reportan horas extra con más frecuencia que los de tiempo completo; dentro de cada tipo de contrato, la omisión ya no depende de cuántas horas extra trabajaron realmente.\n",
+    "4. **Educación:** los estudiantes de escuelas rurales (ubicación observada) tienen mayor tasa de resultados faltantes en un examen estandarizado por problemas logísticos de aplicación, no por su desempeño académico individual.\n",
+    "5. **E-commerce:** los usuarios que compran desde dispositivos móviles (canal observado) dejan en blanco el campo \"dirección de facturación\" con más frecuencia que quienes compran desde escritorio, independientemente del monto de la compra.\n",
+    "\n",
+    "> Nota práctica: MAR es el supuesto más común y más útil en Ciencia de Datos, porque justifica el uso de técnicas multivariadas (KNN, MICE) que aprovechan variables correlacionadas para producir imputaciones no sesgadas."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Ejemplo MAR: Simulación\n",
+    "data_mar = data.copy()\n",
+    "# Si la edad es mayor a 50, hay más probabilidad de que ingreso sea NaN\n",
+    "prob = np.where(data_mar['edad'] > 50, 0.4, 0.05)\n",
+    "mask = np.random.rand(len(data_mar)) < prob\n",
+    "data_mar.loc[mask, 'ingreso'] = np.nan\n",
+    "print('Datos con valores faltantes MAR:')\n",
+    "print(data_mar.head(10))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 3. MNAR (Missing Not At Random / Non-Ignorable)\n",
+    "\n",
+    "**Definición:** La probabilidad de que un valor falte depende directamente del propio valor no observado, incluso tras controlar por todas las variables observadas disponibles.\n",
+    "\n",
+    "**Consecuencias y Estrategias en Feature Engineering:**\n",
+    "- Es el escenario más desafiante: los métodos estándar (media, mediana, KNN, MICE) resultan **sesgados**.\n",
+    "- La ausencia en sí misma constituye una variable latente de alto poder predictivo.\n",
+    "- **Estrategia fundamental:** Crear un **Indicador de Ausencia** (*Missing Indicator*) como característica binaria explícita ($I(\\text{variable is NaN})$) y usar modelos basados en árboles (XGBoost, LightGBM, Random Forest) o modelos de selección de Heckman / modelos de mezcla de patrones (*pattern-mixture models*).\n",
+    "\n",
+    "**Ejemplos:**\n",
+    "1. En encuestas de compensación, ejecutivos con salarios extremadamente altos tienden a omitir la pregunta de salario.\n",
+    "2. En ensayos clínicos sobre depresión, pacientes con síntomas más severos abandonan el estudio (*dropout* por agravamiento del cuadro).\n",
+    "\n",
+    "3. **Encuestas sensibles:** en cuestionarios sobre consumo de alcohol o sustancias, las personas con mayor consumo real tienden a subreportar o dejar la pregunta en blanco, precisamente por el valor que se está midiendo.\n",
+    "4. **IoT / Ambiental:** un sensor de calidad del aire puede saturarse y dejar de reportar lecturas justo cuando la concentración de contaminantes es extremadamente alta, es decir, la ausencia depende del propio valor no observado.\n",
+    "5. **Plataformas digitales:** los clientes muy insatisfechos (que dejarían la calificación más baja) abandonan la plataforma sin completar la reseña, dejando ese dato ausente precisamente por lo negativo de su experiencia.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Ejemplo MNAR: Simulación\n",
+    "data_mnar = data.copy()\n",
+    "# Mayor probabilidad de ser NaN si el ingreso es alto\n",
+    "prob = (data_mnar['ingreso'] > 60000).astype(float) * 0.5 + 0.05\n",
+    "mask = np.random.rand(len(data_mnar)) < prob\n",
+    "data_mnar.loc[mask, 'ingreso'] = np.nan\n",
+    "print('Datos con valores faltantes MNAR:')\n",
+    "print(data_mnar.head(10))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Estrategias de Eliminación y Filtrado\n",
+    "\n",
+    "La eliminación es el enfoque más directo. Existen tres variantes principales:\n",
+    "\n",
+    "1. **Análisis de Casos Completos (*Listwise Deletion*):** Elimina cualquier fila (observación) que contenga al menos un valor faltante (`df.dropna()`).\n",
+    "   - **Ventaja:** Sencillo de implementar; compatible con cualquier algoritmo.\n",
+    "   - **Desventaja:** Pérdida masiva de datos y sesgo garantizado si el mecanismo es MAR o MNAR.\n",
+    "2. **Eliminación por Pares (*Pairwise Deletion*):** Utiliza todas las observaciones disponibles para cada par de variables al calcular covarianzas o correlaciones.\n",
+    "   - **Desventaja:** Las matrices de covarianza resultantes pueden no ser semidefinidas positivas, provocando errores en regresiones o análisis multivariados (PCA).\n",
+    "3. **Filtrado por Umbral de Nulidad (*Threshold Filtering*):**\n",
+    "   - Eliminar columnas (variables) con una tasa de faltantes superior a un umbral $\\tau_{\\text{col}}$ (ej. $> 60\\%-70\\%$), a menos que la ausencia sea una variable de negocio crítica.\n",
+    "   - Eliminar filas (registros) con una tasa de faltantes superior a $\\tau_{\\text{row}}$ (ej. $> 50\\%$).\n",
+    "   - En pandas se utiliza el parámetro `thresh`: `df.dropna(thresh=min_datos_no_nulos)`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfcopy.head() #dataset indicando valores faltantes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#valores faltantes\n",
+    "dfcopy.sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "np.where(dfcopy.sum()>263)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "np.where(dfcopy.sum(axis=1)>60)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Filtrado por umbral (Threshold Deletion) con pandas \n",
+    "# Regla: conservar columnas con al menos el 40% de datos observados (eliminar columnas con >60% NaN)\n",
+    "# y conservar filas con al menos el 50% de columnas completas\n",
+    "\n",
+    "umbral_col = int(0.40 * len(df))\n",
+    "df_filtrado_cols = df.dropna(axis=1, thresh=umbral_col)\n",
+    "\n",
+    "umbral_filas = int(0.50 * df_filtrado_cols.shape[1])\n",
+    "df_filtrado_final = df_filtrado_cols.dropna(axis=0, thresh=umbral_filas)\n",
+    "\n",
+    "print(f\"Dimensiones originales: {df.shape}\")\n",
+    "print(f\"Dimensiones tras filtrado de columnas (>60% NaN): {df_filtrado_cols.shape}\")\n",
+    "print(f\"Dimensiones tras filtrado final de filas (>50% NaN): {df_filtrado_final.shape}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Eliminación de datos por registros y variables\n",
+    "# Simulando un Dataset con valores faltantes\n",
+    "df_data=pd.DataFrame(np.random.randn(100,4)+10*np.random.rand(4),columns=['A','B','C','D'])\n",
+    "for c in df_data.columns[:-1]:\n",
+    "    inan=np.random.randint(100,size=np.random.randint(20))\n",
+    "    df_data.loc[inan, c]=np.nan"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Eliminación de filas (Observaciones)\n",
+    "df_data.dropna()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Eliminación de columnas (Variables)\n",
+    "df_data.dropna(axis=1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Métodos de Imputación Univariada\n",
+    "\n",
+    "La imputación reemplaza cada valor faltante por una estimación plausible basada en la información observada de la **misma columna** (univariada) o de **múltiples columnas** (multivariada).\n",
+    "\n",
+    "### Principios Fundamentales en Feature Engineering:\n",
+    "1. **Preservación de la forma de la distribución:** Los métodos univariados siempre reducen la varianza ($\\sigma^2_{\\text{imputado}} < \\sigma^2_{\\text{original}}$) y crean picos artificiales (*spikes*) en el valor imputado.\n",
+    "2. **Uso de Indicadores de Ausencia (*Missing Indicators*):** Para compensar la distorsión y capturar el mecanismo de pérdida, es una excelente práctica acompañar la imputación con una columna binaria $I(X = \\text{NaN})$."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 1. Imputación por Métricas de Tendencia Central\n",
+    "\n",
+    "#### A. Imputación por la Media\n",
+    "\n",
+    "Reemplaza cada valor faltante por la media aritmética de los valores observados:\n",
+    "\n",
+    "$$\\hat{x}_{i} = \\bar{x}_{\\text{obs}} = \\frac{1}{N_{\\text{obs}}} \\sum_{j \\in \\text{Obs}} x_j$$\n",
+    "\n",
+    "- **Ventajas:** Extremadamente rápida, preserva la media muestral bajo MCAR.\n",
+    "- **Desventajas:**\n",
+    "  - Solo aplicable a variables cuantitativas continuas simétricas (sensible a *outliers*).\n",
+    "  - Reduce la varianza muestral: $\\text{Var}(X_{\\text{imp}}) = \\frac{N_{\\text{obs}}-1}{N-1} \\text{Var}(X_{\\text{obs}})$.\n",
+    "  - Distorsiona correlaciones y covarianzas con otras variables."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Crear un DataFrame de ejemplo\n",
+    "data = {\n",
+    "    'A': [1, 2, None, 4],\n",
+    "    'B': [5, None, None, 8],\n",
+    "    'C': [9, 10, 11, 12]\n",
+    "}\n",
+    "df = pd.DataFrame(data)\n",
+    "print('DataFrame original:')\n",
+    "print(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.mean(numeric_only=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputar con la media\n",
+    "df = df.fillna(df.mean(numeric_only=True))\n",
+    "df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.impute import SimpleImputer\n",
+    "\n",
+    "# Imputar con la media\n",
+    "imp_mean = SimpleImputer(strategy='mean')\n",
+    "imp_mean.fit_transform(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pd.DataFrame(imp_mean.fit_transform(df), columns = df.columns)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Demostración visual de la reducción de varianza provocada por la imputación de la media\n",
+    "np.random.seed(42)\n",
+    "x_real = np.random.normal(loc=50, scale=10, size=1000)\n",
+    "x_con_nan = x_real.copy()\n",
+    "# 25% de valores faltantes\n",
+    "x_con_nan[np.random.rand(1000) < 0.25] = np.nan\n",
+    "\n",
+    "x_imputado_media = pd.Series(x_con_nan).fillna(np.nanmean(x_con_nan))\n",
+    "\n",
+    "plt.figure(figsize=(10, 4))\n",
+    "sns.kdeplot(x_real, label=f'Original (Var = {np.var(x_real):.2f})', color='darkblue', linewidth=2)\n",
+    "sns.kdeplot(x_imputado_media, label=f'Imputado Media (Var = {np.var(x_imputado_media):.2f})', color='crimson', linestyle='--', linewidth=2)\n",
+    "plt.axvline(np.nanmean(x_con_nan), color='crimson', linestyle=':', label='Media imputada')\n",
+    "plt.title('Efecto de la Imputación por la Media: Concentración de Densidad y Pérdida de Varianza', fontsize=12)\n",
+    "plt.xlabel('Valor de la Variable')\n",
+    "plt.ylabel('Densidad')\n",
+    "plt.legend()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### B. Técnica Clave de Feature Engineering: Indicador de Ausencia (*Missing Indicator*)\n",
+    "\n",
+    "Cuando imputamos un valor central (media o mediana), el modelo pierde la información de si el dato era originalmente ausente. Al añadir una **columna indicadora binaria** ($1$ si era faltante, $0$ si estaba presente), el modelo (especialmente regresión logística, SVM o redes neuronales) puede aprender un intercepto o peso separado para los registros imputados:\n",
+    "\n",
+    "$$\\text{Feature}_{\\text{imputada}} = \\text{impute}(X), \\qquad \\text{Feature}_{\\text{is\\_missing}} = I(X \\text{ es NaN})$$\n",
+    "\n",
+    "En `scikit-learn` se activa directamente con `add_indicator=True` dentro de `SimpleImputer`, `KNNImputer` o `IterativeImputer`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Uso de SimpleImputer con indicador binario de ausencia integrado\n",
+    "from sklearn.impute import SimpleImputer\n",
+    "\n",
+    "imputer_con_indicador = SimpleImputer(strategy='median', add_indicator=True)\n",
+    "df_ejemplo = pd.DataFrame({\n",
+    "    'edad': [25, np.nan, 30, 45, np.nan, 50],\n",
+    "    'salario': [35000, 42000, np.nan, 80000, 95000, 110000]\n",
+    "})\n",
+    "\n",
+    "matriz_imputada = imputer_con_indicador.fit_transform(df_ejemplo)\n",
+    "nombres_columnas = list(df_ejemplo.columns) + [f\"{col}_is_missing\" for col in df_ejemplo.columns]\n",
+    "df_resultado_indicador = pd.DataFrame(matriz_imputada, columns=nombres_columnas)\n",
+    "print(\"Dataset con imputación de mediana + Missing Indicators:\")\n",
+    "df_resultado_indicador"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### C. Imputación por la Mediana\n",
+    "\n",
+    "Reemplaza los valores faltantes por el percentil 50 de la muestra observada:\n",
+    "\n",
+    "$$\\hat{x}_i = \\text{Mediana}(X_{\\text{obs}})$$\n",
+    "\n",
+    "- **Ventaja:** Muy robusta frente a datos atípicos (*outliers*) y distribuciones asimétricas (sesgadas a la derecha o izquierda, como ingresos, precios o tiempos de espera).\n",
+    "- **Desventaja:** Al igual que la media, contrae artificialmente la varianza y altera las correlaciones multivariadas. Es la opción univariada por defecto preferida sobre la media en la práctica."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Crear un DataFrame de ejemplo\n",
+    "data = {\n",
+    "    'A': [1, 2, None, 4],\n",
+    "    'B': [5, None, None, 8],\n",
+    "    'C': [9, 10, 11, 12]\n",
+    "}\n",
+    "df = pd.DataFrame(data)\n",
+    "print('DataFrame original:')\n",
+    "print(df)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputar con la mediana\n",
+    "df_mediana = df.copy()\n",
+    "df_mediana = df_mediana.fillna(df.median(numeric_only=True))\n",
+    "df_mediana"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputar con la mediana con la librería\n",
+    "# Imputar con la media\n",
+    "imp_median = SimpleImputer(strategy='median')\n",
+    "imp_median.fit_transform(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Comparación gráfica: Imputación Media vs Mediana en presencia de asimetría y outliers\n",
+    "np.random.seed(42)\n",
+    "ingresos = np.random.exponential(scale=20000, size=800) + 10000  # Asimétrico a la derecha\n",
+    "ingresos_nan = ingresos.copy()\n",
+    "ingresos_nan[np.random.rand(800) < 0.20] = np.nan\n",
+    "\n",
+    "imp_mean_vals = pd.Series(ingresos_nan).fillna(np.nanmean(ingresos_nan))\n",
+    "imp_median_vals = pd.Series(ingresos_nan).fillna(np.nanmedian(ingresos_nan))\n",
+    "\n",
+    "plt.figure(figsize=(10, 4))\n",
+    "sns.kdeplot(ingresos, label='Original (Distribución asimétrica)', color='black', linewidth=2)\n",
+    "sns.kdeplot(imp_mean_vals, label=f'Imputado Media ({np.nanmean(ingresos_nan):,.0f})', color='darkorange', linestyle='--')\n",
+    "sns.kdeplot(imp_median_vals, label=f'Imputado Mediana ({np.nanmedian(ingresos_nan):,.0f})', color='green', linestyle='-.')\n",
+    "plt.title('Comparación: Media vs Mediana en Distribución Asimétrica', fontsize=12)\n",
+    "plt.xlabel('Ingreso ($)')\n",
+    "plt.ylabel('Densidad')\n",
+    "plt.legend()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### D. Imputación para Variables Categóricas: Moda vs. Categoría \"Faltante / Desconocido\"\n",
+    "\n",
+    "Para variables cualitativas existen dos enfoques principales:\n",
+    "\n",
+    "1. **Moda (Categoría más frecuente):**\n",
+    "   - Reemplaza el faltante por el valor que más se repite: $\\hat{c} = \\text{argmax}_{c} \\text{conteo}(c)$.\n",
+    "   - **Recomendado:** Cuando la moda es abrumadoramente dominante ($> 80\\%$) y la tasa de faltantes es muy baja ($< 5\\%$).\n",
+    "   - **Riesgo:** Si la moda no es dominante, sobre-representa la categoría modal y desbalancea las frecuencias.\n",
+    "\n",
+    "2. **Creación de una Categoría Explícita (`'Desconocido'` / `'Missing'`):**\n",
+    "   - Trata la ausencia como una nueva categoría válida en lugar de adivinar una categoría existente.\n",
+    "   - **Especialmente útil cuando el mecanismo es MNAR** o cuando la falta de respuesta tiene significado propio."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputar con la moda\n",
+    "df_moda = df.copy()\n",
+    "moda = df.mode().iloc[0]\n",
+    "df_moda = df_moda.fillna(moda)\n",
+    "df_moda"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputar con la moda\n",
+    "imp_mode = SimpleImputer(strategy='most_frequent')\n",
+    "imp_mode.fit_transform(df)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### Ejemplo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputación por categoría constante ('Desconocido' o 'Missing')\n",
+    "imp_constant = SimpleImputer(strategy='constant', fill_value='Desconocido')\n",
+    "df_cat_ejemplo = pd.DataFrame({\n",
+    "    'ciudad': ['Guadalajara', 'CDMX', np.nan, 'Monterrey', np.nan, 'Guadalajara']\n",
+    "})\n",
+    "\n",
+    "df_cat_imputado = pd.DataFrame(imp_constant.fit_transform(df_cat_ejemplo), columns=['ciudad'])\n",
+    "print(\"Frecuencias tras imputar como categoría explícita 'Desconocido':\")\n",
+    "print(df_cat_imputado['ciudad'].value_counts())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# otro ejemplo titanic\n",
+    "# Seleccionar columnas categóricas con valores faltantes\n",
+    "df_mo_titanic = titanic_df\n",
+    "df_mo_titanic"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_mo_titanic.select_dtypes('object').columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_mo_titanic.select_dtypes('object').isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "titanic_cat_mode = SimpleImputer(strategy='most_frequent')\n",
+    "titanic_cat_mode.fit_transform(df_mo_titanic.select_dtypes('object'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### E. Imputación por Valor Arbitrario o Extremo\n",
+    "\n",
+    "Consiste en reemplazar los valores faltantes por un número que no se encuentra en el rango natural de la variable (por ejemplo, $-999$, $-1$ o el percentil $99 + 3 \\times \\text{IQR}$).\n",
+    "\n",
+    "- **Ventajas:** Muy eficaz para algoritmos basados en árboles de decisión (Decision Tree, Random Forest, XGBoost), ya que el árbol puede crear una partición limpia que aísle los datos faltantes en una rama propia.\n",
+    "- **Desventaja:** **Peligroso para modelos lineales o basados en distancia** (KNN, SVM, Regresión Lineal/Logística, Redes Neuronales), donde un valor extremo distorsiona fuertemente los gradientes y coeficientes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Imputación por valor arbitrario extremo (-999) para modelos de árboles\n",
+    "imp_arbitrario = SimpleImputer(strategy='constant', fill_value=-999)\n",
+    "df_num_arb = pd.DataFrame({'edad': [23, np.nan, 45, np.nan, 60]})\n",
+    "df_arb_res = pd.DataFrame(imp_arbitrario.fit_transform(df_num_arb), columns=['edad'])\n",
+    "print(\"Dataset imputado con valor extremo (-999):\")\n",
+    "print(df_arb_res)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Imputación en Series Temporales y Datos Secuenciales\n",
+    "\n",
+    "Cuando las observaciones poseen un **orden cronológico o secuencial intrínseco**, la media global no tiene sentido físico. Se utilizan métodos basados en la trayectoria temporal:\n",
+    "\n",
+    "### 1. Forward Fill (`ffill`) y Backward Fill (`bfill`)\n",
+    "- **Forward Fill (Última Observación Llevada Hacia Adelante - LOCF):** $x_t = x_{t-1}^*$. Asume que el estado del sistema persiste hasta que ocurra un nuevo evento.\n",
+    "- **Backward Fill (Próxima Observación Llevada Hacia Atrás - NOCB):** $x_t = x_{t+1}^*$.\n",
+    "- **Combinación robusta:** `df.ffill().bfill()` para asegurar que no queden nulos al inicio ni al final de la serie.\n",
+    "\n",
+    "### 2. Interpolación Matemática (Lineal, Polinomial, Spline)\n",
+    "Calcula el valor faltante asumiendo una curva suave o recta entre los puntos conocidos adyacentes:\n",
+    "\n",
+    "$$\\hat{x}_t = x_{t_0} + \\frac{x_{t_1} - x_{t_0}}{t_1 - t_0}(t - t_0)$$\n",
+    "\n",
+    "En `pandas` se ejecuta con `.interpolate(method='linear')`, `.interpolate(method='quadratic')` o `.interpolate(method='time')`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Crear una serie temporal con valores faltantes\n",
+    "np.random.seed(0)\n",
+    "dates = pd.date_range('2023-01-01', periods=20)\n",
+    "values = np.random.randn(20).cumsum()\n",
+    "series = pd.Series(values, index=dates)\n",
+    "\n",
+    "# Introducir valores faltantes\n",
+    "series.iloc[[3, 4, 10, 11, 12, 17]] = np.nan\n",
+    "print('Serie original con valores faltantes:')\n",
+    "print(series)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Comparativa de técnicas temporales: ffill, bfill e interpolación lineal y spline\n",
+    "series_ffill = series.ffill()\n",
+    "series_bfill = series.bfill()\n",
+    "series_interp_lin = series.interpolate(method='linear')\n",
+    "series_interp_spline = series.interpolate(method='spline', order=2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "series_ffill"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Visualización comparativa de métodos temporales\n",
+    "plt.figure(figsize=(12, 6))\n",
+    "plt.plot(series.index, series.values, 'ko', markersize=8, label='Datos Observados (Con NAs)', zorder=5)\n",
+    "plt.plot(series_ffill.index, series_ffill.values, 's--', color='orange', alpha=0.8, label='Forward Fill (LOCF)')\n",
+    "plt.plot(series_bfill.index, series_bfill.values, 'd--', color='purple', alpha=0.6, label='Backward Fill (NOCB)')\n",
+    "plt.plot(series_interp_lin.index, series_interp_lin.values, 'g^-', linewidth=2, label='Interpolación Lineal')\n",
+    "plt.plot(series_interp_spline.index, series_interp_spline.values, 'r.-', linewidth=2, label='Interpolación Spline (Orden 2)')\n",
+    "\n",
+    "plt.xticks(rotation=30, ha='right')\n",
+    "plt.grid(True, linestyle=':', alpha=0.6)\n",
+    "plt.legend(loc='best', frameon=True)\n",
+    "plt.title('Comparación de Métodos de Imputación para Series Temporales', fontsize=13)\n",
+    "plt.xlabel('Fecha')\n",
+    "plt.ylabel('Valor de la Serie')\n",
+    "plt.tight_layout()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- Es recomendable usar estos métodos solo cuando los datos tienen un orden natural (por ejemplo, tiempo).\n",
+    "- Si los valores faltantes están al inicio o final de la serie, forward fill o backward fill pueden no imputar todos los valores.\n",
+    "- Se pueden combinar ambos métodos para imputar valores al inicio y final:\n",
+    "\n",
+    "```python\n",
+    "serie_imputada = serie.ffill().bfill()\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Imputación por Donantes (Hot Deck y Cold Deck)\n",
+    "\n",
+    "Los métodos de donantes sustituyen los valores faltantes por valores reales observados de otros registros (\"donantes\").\n",
+    "\n",
+    "### 1. Imputación Hot Deck\n",
+    "El donante proviene del **mismo conjunto de datos**.\n",
+    "- **Aleatorio simple:** Se extrae un valor al azar de la distribución observada ($x_{i,\\text{imp}} = x_{j,\\text{obs}}$). Preserva la distribución empírica original y la varianza, a diferencia de la media.\n",
+    "- **Estratificado / Por similitud:** Se divide el dataset en grupos/estratos (ej. por edad o género) y se selecciona un donante dentro del mismo grupo.\n",
+    "\n",
+    "### 2. Imputación Cold Deck\n",
+    "El donante proviene de una **fuente externa o histórica** (ej. censo anterior, tabla estándar del sector).\n",
+    "\n",
+    "$$x_{i,\\text{imp}} = x_{k,\\text{externo}}, \\quad k \\in \\mathcal{D}_{\\text{externo}}$$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Simulación de datos\n",
+    "np.random.seed(42)\n",
+    "df = pd.DataFrame({\n",
+    "    'edad': np.random.randint(18, 65, 20),\n",
+    "    'ingreso': np.random.randint(10000, 50000, 20)\n",
+    "})\n",
+    "# Introducir valores faltantes\n",
+    "df.loc[[2, 5, 7, 12], 'ingreso'] = np.nan\n",
+    "print('Datos originales con valores faltantes:')\n",
+    "print(df)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### A. Hot Deck Aleatorio Simple\n",
+    "Preserva la varianza empírica muestreando con reemplazo de los datos observados:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Imputación Hot Deck aleatoria\n",
+    "df_imp_hot_deck=df.copy()\n",
+    "donantes = df['ingreso'].dropna()\n",
+    "for idx in df_imp_hot_deck[df_imp_hot_deck['ingreso'].isnull()].index:\n",
+    "    df_imp_hot_deck.loc[idx,'ingreso'] = np.random.choice(donantes)\n",
+    "df_imp_hot_deck"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#grupo edad\n",
+    "df['grupo_edad'] = pd.cut(df['edad'], bins=[17, 30, 45, 65], labels=['Joven', 'Adulto', 'Mayor'])\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Introducimos de nuevo valores faltantes para el ejemplo\n",
+    "df.loc[[2, 5, 7, 12], 'ingreso'] = np.nan\n",
+    "df_imp_hotdeck_group = df.copy()\n",
+    "df_imp_hotdeck_group.head(15)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "scrolled": true
+   },
+   "source": [
+    "#### B. Hot Deck Estratificado por Grupo\n",
+    "El donante se selecciona dentro del mismo estrato (por ejemplo, mismo grupo de edad):"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Imputación Hot Deck por grupo\n",
+    "for idx, row in df_imp_hotdeck_group[df_imp_hotdeck_group['ingreso'].isnull()].iterrows():\n",
+    "    grupo = row['grupo_edad']\n",
+    "    donantes = df_imp_hotdeck_group[(df_imp_hotdeck_group['grupo_edad']==grupo) & (df_imp_hotdeck_group['ingreso'].notnull())]['ingreso']\n",
+    "    if not donantes.empty:\n",
+    "        df_imp_hotdeck_group.loc[idx, 'ingreso'] = np.random.choice(donantes)\n",
+    "    else:\n",
+    "        df_imp_hotdeck_group.loc[idx, 'ingreso'] = np.random.choice(df_imp_hotdeck_group['ingreso'].dropna())\n",
+    "df_imp_hotdeck_group\n",
+    " "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Imputación Cold Deck usando un Dataset Externo: Supongamos que tenemos un dataset histórico con la misma estructura y lo usamos como fuente de donantes\n",
+    "#Dataset externo (histórico)\n",
+    "df_ext = pd.DataFrame({\n",
+    "    'edad': np.random.randint(18, 65, 20),\n",
+    "    'ingreso': np.random.randint(12000, 48000, 20)\n",
+    "})\n",
+    "df_ext"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Imputación Cold Deck: tomar valores de ingreso del dataset externo\n",
+    "df_imp_cold_deck=df.copy()\n",
+    "donantes = df_ext['ingreso'].dropna()\n",
+    "for idx in df_imp_cold_deck[df_imp_cold_deck['ingreso'].isnull()].index:\n",
+    "    df_imp_cold_deck.loc[idx,'ingreso'] = np.random.choice(donantes)\n",
+    "df_imp_cold_deck"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "La siguiente tabla resume la recomendación por tipo de variable y el porqué.\n",
+    "\n",
+    "| Tipo de variable | Imputación recomendada | ¿Por qué es la más adecuada? |\n",
+    "|---|---|---|\n",
+    "| **Cuantitativa (continua o discreta)** | **Mediana** (o media solo si la distribución es simétrica y sin outliers)| La mediana no se distorsiona por valores atípicos ni por asimetría (ingresos, tiempos, precios). La media es válida únicamente cuando la distribución es aproximadamente simétrica, porque de lo contrario el valor imputado no representa al \"dato típico\". Ambas contraen la varianza, por lo que conviene acompañarlas de un *Missing Indicator*. |\n",
+    "| **Binaria** | **Moda** (categoría dominante) si la tasa de faltantes es baja; **categoría \"Desconocido\"** si el patrón sugiere MNAR | Solo existen dos estados posibles, así que promediar no tiene sentido (produciría un valor intermedio inexistente). La moda es razonable si una de las dos categorías domina claramente; si la ausencia podría depender del propio valor (p. ej. `y` en una campaña de ventas), es más honesto crear una tercera categoría explícita que forzar la moda. |\n",
+    "| **Categórica nominal** | **Moda** (si es muy dominante y hay pocos faltantes) o **categoría \"Desconocido/Missing\"** (opción por defecto más segura) | No existe un orden entre categorías, por lo que no se puede \"interpolar\" ni promediar. Forzar la moda cuando no es dominante desbalancea artificialmente las frecuencias observadas; tratar la ausencia como una categoría propia evita inventar información y es especialmente recomendable si el mecanismo es MNAR. |\n",
+    "| **Categórica ordinal** | **Moda** o **mediana de las categorías codificadas con su orden** (nunca la media aritmética de códigos arbitrarios) | Al existir un orden, la mediana es interpretable como \"el nivel central\" y es más representativa que la moda cuando las categorías están repartidas. La media no debe usarse sobre los códigos numéricos (`1,2,3,...`) porque la distancia entre niveles no necesariamente es igual (ver `education` en el cuaderno de clasificación de tipos de datos). |\n",
+    "\n",
+    "> la pregunta correcta no es \"¿qué tan fácil es de calcular?\" sino \"¿qué operación estadística respeta el significado de la variable?\". Media y varianza solo tienen sentido para escalas cuantitativas; para el resto, moda, mediana ordinal o una categoría explícita son las opciones defendibles.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Práctica de Laboratorio: Datos Faltantes\n",
+    "\n",
+    "1. En `titanic_df`, la variable `deck` tiene una tasa de faltantes muy alta y `age` una tasa moderada. Usando `msno.matrix`, argumenta si la ausencia de `age` parece MCAR, MAR o MNAR. ¿Con qué otra variable observada podría estar asociada?\n",
+    "2. En el dataset `API_SI.POV.DDAY_DS2.csv` (pobreza), los años más antiguos tienen muchos más valores faltantes que los años recientes. ¿Qué mecanismo describe mejor este patrón? Justifica con base en cómo se recolectan estadísticas internacionales.\n",
+    "3. Propón un ejemplo propio (no visto en este cuaderno) de un proceso MCAR, uno MAR y uno MNAR en un contexto de tu interés (salud, finanzas, redes sociales, IoT, etc.).\n",
+    "\n",
+    "4. Para `titanic_df`, decide y justifica una estrategia de tratamiento distinta para `age` (numérica, ~20% faltante), `embarked` (categórica, muy pocos faltantes) y `deck` (categórica, mayoría faltante).\n",
+    "5. Compara, para una misma variable numérica con outliers, el resultado de imputar con la media vs. la mediana. ¿Cuál preferirías y por qué?\n",
+    "\n",
+    "### Reto: Imputación multivariada\n",
+    "\n",
+    "En este cuaderno solo cubrimos imputación **univariada** (media, mediana, moda, valor constante) y por **donantes** (hot deck / cold deck). Sin embargo, cuando el mecanismo es MAR y existen varias variables correlacionadas, suele ser más preciso usar **imputación multivariada**, que estima cada valor faltante en función de las demás columnas del dataset.\n",
+    "\n",
+    "Investiga por tu cuenta y responde:\n",
+    "\n",
+    "1. ¿Qué hace `sklearn.impute.KNNImputer` y cómo utiliza la distancia entre observaciones (filas) para imputar un valor faltante? ¿Qué ocurre si dos filas tienen faltantes en las mismas columnas usadas para calcular la distancia?\n",
+    "2. ¿Qué es `sklearn.impute.IterativeImputer` (implementación de la idea de **MICE**, *Multiple Imputation by Chained Equations*)? Describe, a grandes rasgos, su procedimiento iterativo: ¿qué variable se imputa primero, cómo se usan las demás como predictoras y por qué se repite el proceso varias veces?\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "colab": {
+   "authorship_tag": "ABX9TyMTW0CgiNuDtQqTMAAgsXcO",
+   "mount_file_id": "1eR5u1Ux1eGsjY_TD19_6pumO3HQNdvkQ",
+   "provenance": []
+  },
+  "kernelspec": {
+   "display_name": "Python (IC 2026)",
+   "language": "python",
+   "name": "ic_curso_2026"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+
+======================================================================
+ARCHIVO: .\3.2.- Distribución de Datos.ipynb
+======================================================================
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div style=\"background: linear-gradient(120deg, #1a3a5c 0%, #2d6a9f 60%, #4a9eda 100%); padding: 28px 36px; border-radius: 14px; display: flex; align-items: center; gap: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.18);\">\n",
+    "    <img src='Figures/iteso.jpg' style=\"height: 110px; border-radius: 8px; background: white; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);\"/>\n",
+    "    <div style=\"border-left: 2px solid rgba(255,255,255,0.4); padding-left: 28px;\">\n",
+    "        <h1 style=\"margin: 0 0 8px 0; color: white; font-size: 1.5em; line-height: 1.3;\">Ingeniería y Ciencia de Datos</h1>\n",
+    "        <h3 style=\"margin: 0 0 8px 0; color: white; font-size: 1.5em; line-height: 1.3;\">Laboratorio de Procesamiento de Datos</h3>\n",
+    "        <h3 style=\"margin: 0; color: rgba(255,255,255,0.8); font-weight: normal; font-size: 1.05em;\">Módulo 2: Distribución de Datos</h3>\n",
+    "    </div>\n",
+    "</div>\n",
+    "\n",
+    "> una distribución no se entiende con un único número. Combina gráficos, medidas de posición, dispersión y forma para decidir cómo tratar una variable.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 1826,
+     "status": "ok",
+     "timestamp": 1675818739316,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "GuZUNBV307ip"
+   },
+   "outputs": [],
+   "source": [
+    "from scipy import stats\n",
+    "from sklearn.datasets import load_wine\n",
+    "import matplotlib.pyplot as plt\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "\n",
+    "pd.set_option('display.float_format', '{:,.3f}'.format)\n",
+    "plt.style.use('seaborn-v0_8-whitegrid')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 270
+    },
+    "executionInfo": {
+     "elapsed": 9,
+     "status": "ok",
+     "timestamp": 1675818739320,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "rwKixISG3Em7",
+    "outputId": "566d31e4-4888-4acf-b29d-a3fcd2ead3dc"
+   },
+   "outputs": [],
+   "source": [
+    "wine = load_wine(as_frame=True)\n",
+    "df = wine.data.copy()\n",
+    "df['target'] = wine.target\n",
+    "\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "zmIUDxwY3l63"
+   },
+   "source": [
+    "## ¿Qué significa la distribución de una variable?\n",
+    "\n",
+    "La **distribución** describe cómo se reparten los valores: dónde se concentran, qué tan dispersos están, si existen colas, grupos o valores extremos. No es lo mismo que una distribución normal; la normal es solo un modelo posible.\n",
+    "\n",
+    "En este cuaderno usaremos la variable `alcohol` del dataset Wine. El objetivo es practicar un flujo de diagnóstico:\n",
+    "\n",
+    "1. Revisar escala y valores faltantes.\n",
+    "2. Observar histograma y diagrama de cajas.\n",
+    "3. Resumir con media, mediana y cuantiles.\n",
+    "4. Medir dispersión y forma.\n",
+    "5. Comparar la evidencia antes de decidir una transformación.\n",
+    "\n",
+    "Referencias: [scikit-learn: dataset Wine](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html) , [Matplotlib: histogramas](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html) , [SciPy: estadística](https://docs.scipy.org/doc/scipy/reference/stats.html)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#'total phenols'\n",
+    "#df.loc[:,'total phenols']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "feature = df['alcohol']\n",
+    "print(f'Observaciones: {feature.size}')\n",
+    "print(f'Faltantes: {feature.isna().sum()}')\n",
+    "print(f'Rango: {feature.min():.2f} a {feature.max():.2f}')\n",
+    "feature.describe()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Antes de graficar: conocer la variable\n",
+    "\n",
+    "La misma técnica no sirve para todos los tipos de datos. Un histograma es apropiado para una variable cuantitativa; para una categoría conviene usar frecuencias o proporciones."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 265
+    },
+    "executionInfo": {
+     "elapsed": 869,
+     "status": "ok",
+     "timestamp": 1675818760924,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "PtI5CPhC3Wfy",
+    "outputId": "55f1cb88-203f-4323-f3f9-1c5f63e6e685"
+   },
+   "outputs": [],
+   "source": [
+    "x=df.alcohol # objeto de tipo series\n",
+    "h=x.hist(bins=100)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.drop(columns='target').hist(figsize=(14, 10), bins=12)\n",
+    "plt.tight_layout()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "type(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 334
+    },
+    "executionInfo": {
+     "elapsed": 414,
+     "status": "ok",
+     "timestamp": 1675219765610,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "4M2OiS7a321i",
+    "outputId": "97d83864-e998-4a71-d4ba-ad6d10bead59"
+   },
+   "outputs": [],
+   "source": [
+    "plt.hist(x);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Histograma, caja y gráfico Q-Q\n",
+    "\n",
+    "Cada gráfico responde una pregunta distinta:\n",
+    "\n",
+    "- **Histograma:** ¿dónde se concentran los valores y hay colas o grupos?\n",
+    "- **Caja:** ¿cuál es el centro, el 50% central y qué observaciones podrían ser extremas?\n",
+    "- **Q-Q:** ¿qué tan cerca están los cuantiles observados de los cuantiles de una normal? Si los puntos siguen aproximadamente una línea recta, los datos son compatibles visualmente con una distribución normal. Curvas o desviaciones sistemáticas respecto a la línea indican diferencias, como asimetría o colas más pesadas o ligeras que las normales. Los puntos más alejados en los extremos pueden señalar valores extremos.\n",
+    "\n",
+    "Un Q-Q plot alineado no demuestra normalidad; solo indica compatibilidad visual con ese modelo."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, axes = plt.subplots(1, 3, figsize=(16, 4))\n",
+    "\n",
+    "axes[0].hist(x, bins=12, color='steelblue', edgecolor='black')\n",
+    "axes[0].set_title('Histograma')\n",
+    "axes[0].set_xlabel('alcohol')\n",
+    "axes[0].set_ylabel('Frecuencia')\n",
+    "\n",
+    "axes[1].boxplot(x, vert=False, patch_artist=True, boxprops={'facecolor': 'lightgreen'})\n",
+    "axes[1].set_title('Diagrama de cajas')\n",
+    "axes[1].set_xlabel('alcohol')\n",
+    "\n",
+    "stats.probplot(x, dist='norm', plot=axes[2])\n",
+    "axes[2].set_title('Gráfico Q-Q contra normal')\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "rINMXPdT45vr"
+   },
+   "source": [
+    "# Medidas de posición o de tendencia central"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Media aritmética"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "La **media** es el promedio aritmético de un conjunto de datos.\n",
+    "\n",
+    "$$ \\bar{x} = \\frac{1}{n} \\sum_{i=1}^{n} x_i $$\n",
+    "\n",
+    "Donde $x_i$ son los valores y $n$ es el número total de datos."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Ejemplo de cálculo de la media en Python\n",
+    "datos = [10, 12, 15, 18, 20] # conjunto de datos\n",
+    "media = np.mean(datos)       # cálculo de la media con python\n",
+    "print('Media:', media) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 4,
+     "status": "ok",
+     "timestamp": 1675220001959,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "Fk-aWUBl49Cn",
+    "outputId": "974f199c-f136-40da-eee4-c79a40064d73"
+   },
+   "outputs": [],
+   "source": [
+    "# Considerando la característica \"alcohol\" del dataframe df\n",
+    "x.mean()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 148,
+     "status": "ok",
+     "timestamp": 1675220030335,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "7kirvY505KKw",
+    "outputId": "72a4a0e3-b253-4fd4-9818-0eb87d3240f9"
+   },
+   "outputs": [],
+   "source": [
+    "#Esto es equivalente a utilizar el método de la librería de numpy\n",
+    "np.mean(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 150,
+     "status": "ok",
+     "timestamp": 1675220047504,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "NqbicXTp5RGf",
+    "outputId": "30272907-6940-47d6-efc2-60a23fca48d6"
+   },
+   "outputs": [],
+   "source": [
+    "# Obtención de la media de todas las características en el dataset\n",
+    "s_mean = df.mean()\n",
+    "s_mean"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Media de la carcaterística flavanoids\n",
+    "s_mean['flavanoids'] "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(7, 4))\n",
+    "plt.hist(x, bins=12, alpha=0.7, color='steelblue', edgecolor='black')\n",
+    "plt.axvline(x.mean(), color='crimson', linestyle='--', linewidth=2, label=f'Media = {x.mean():.2f}')\n",
+    "#plt.axvline(x.median(), color='darkgreen', linestyle='--', linewidth=2, label=f'Mediana = {x.median():.2f}')\n",
+    "plt.title('Distribución de alcohol: media y mediana')\n",
+    "plt.xlabel('Porcentaje de alcohol')\n",
+    "plt.ylabel('Frecuencia')\n",
+    "plt.legend()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Moda"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "La moda es una medida de tendencia central que representa el valor que aparece con mayor frecuencia en un conjunto de datos.\n",
+    "La moda es útil para describir conjuntos de datos donde un valor ocurre con mucha frecuencia. Puede haber más de una moda (bimodal, multimodal) o ninguna si todos los valores son únicos."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "datos_ejemplo = [2, 4, 4, 6, 8, 4, 6, 8, 8, 8]\n",
+    "moda = stats.mode(datos_ejemplo, keepdims=True)\n",
+    "print('Moda:', moda.mode[0], 'Frecuencia:', moda.count[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 176,
+     "status": "ok",
+     "timestamp": 1675220877011,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "Zwe3Dqab8Jpn",
+    "outputId": "0b2a38bf-9734-4749-a319-66341d5a64bb"
+   },
+   "outputs": [],
+   "source": [
+    "x.mode()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 196,
+     "status": "ok",
+     "timestamp": 1675220947696,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "w_CO7pxl8fzd",
+    "outputId": "172e08fe-82d2-4a8c-821b-8d313bb8954d"
+   },
+   "outputs": [],
+   "source": [
+    "mo=stats.mode(x)\n",
+    "mo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 166,
+     "status": "ok",
+     "timestamp": 1675220962916,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "o7QC3usl8q0n",
+    "outputId": "81d56a5a-0ada-46f7-dbb9-c08d41042f37"
+   },
+   "outputs": [],
+   "source": [
+    "mo[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 170,
+     "status": "ok",
+     "timestamp": 1675220967948,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "g2EflyuR80xv",
+    "outputId": "96a56710-3be2-41ab-fcc2-e8ce92286a53"
+   },
+   "outputs": [],
+   "source": [
+    "mo[1]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Mediana"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "La mediana representa el valor central de un conjunto de datos ordenados. Es especialmente útil cuando los datos contienen valores atípicos o están sesgados.\n",
+    "\n",
+    "- Si el número de datos ($n$) es impar:\n",
+    "\n",
+    "$$ \\text{Mediana} = x_{\\frac{n+1}{2}} $$\n",
+    "\n",
+    "- Si el número de datos ($n$) es par:\n",
+    "\n",
+    "$$ \\text{Mediana} = \\frac{x_{\\frac{n}{2}} + x_{\\frac{n}{2}+1}}{2} $$\n",
+    "\n",
+    "Donde $x_i$ representa los datos ordenados de menor a mayor.\n",
+    "\n",
+    "La mediana divide el conjunto de datos en dos partes iguales: el 50% de los valores son menores o iguales a la mediana y el otro 50% son mayores o iguales. Es menos sensible a valores extremos que la media.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "datos1 = [3, 7, 9, 15, 21]\n",
+    "datos2 = [4, 8, 15, 16]\n",
+    "print('Mediana (impar):', np.median(datos1))\n",
+    "print('Mediana (par):', np.median(datos2))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 168,
+     "status": "ok",
+     "timestamp": 1675221021897,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "4NFkREzV88_h",
+    "outputId": "87282da9-fc1f-4c0e-8eb4-e577865e7bf1"
+   },
+   "outputs": [],
+   "source": [
+    "x.median()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 188,
+     "status": "ok",
+     "timestamp": 1675221033893,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "3hjd9PiX9DLv",
+    "outputId": "8a399517-e82c-47fc-da75-060a60387014"
+   },
+   "outputs": [],
+   "source": [
+    "np.median(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(10, 4))\n",
+    "plt.hist(x, bins=20, alpha=0.6, color='blue', edgecolor='black', label='Datos')\n",
+    "plt.axvline(x.mean(), color='red', linestyle='dashed', linewidth=2, label=f'Media = {x.mean():.2f}')\n",
+    "plt.axvline(x.median(), color='green', linestyle='dashed', linewidth=2, label=f'Mediana = {x.median():.2f}')\n",
+    "plt.axvline(stats.mode(x)[0], color='purple', linestyle='dashed', linewidth=2, label=f'Moda = {stats.mode(x)}')\n",
+    "plt.title('Distribución de los datos con media, mediana y moda')\n",
+    "plt.xlabel('Valor')\n",
+    "plt.ylabel('Frecuencia')\n",
+    "plt.legend()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Cuantiles o percentiles"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- **Cuartiles:** Dividen los datos en 4 partes iguales.\n",
+    "- **Deciles:** Dividen los datos en 10 partes iguales.\n",
+    "- **Percentiles:** Dividen los datos en 100 partes iguales."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Cuartiles"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Dada una muestra $x_1,x_2,...,x_n$, podemos ordenar los datos de menor a mayor y dividirlos en cuatro partes con la misma cantidad de datos. Los cortes de estas divisiones son lo que llamamos cuartiles. Para dividir un conjunto de datos en cuatro partes, necesitamos tres cuartiles, identificados como $Q_1$, $Q_2$ y $Q_3$.\n",
+    "\n",
+    "Junto con el mínimo y el máximo, estos 5 valores sirven para resumir la distribución de una variable, con menos detalle que un histograma pero con más información que usando sólo la media y la varianza."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 153,
+     "status": "ok",
+     "timestamp": 1675221156594,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "mpZD3yYZ9GGS",
+    "outputId": "44b27f28-b867-4f69-bd79-dcbd0abfa165"
+   },
+   "outputs": [],
+   "source": [
+    "x.quantile(0.25) # Primer cuartíl"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 200,
+     "status": "ok",
+     "timestamp": 1675221208394,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "LQEoHQn29kER",
+    "outputId": "df1f9e58-9258-4b73-f695-e07d1aa88ec7"
+   },
+   "outputs": [],
+   "source": [
+    "x.quantile(0.1) # Primer decíl"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 166,
+     "status": "ok",
+     "timestamp": 1675221250286,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "jh8c6_pA9wsf",
+    "outputId": "18607f6d-47d2-4820-a1a8-48565e831989"
+   },
+   "outputs": [],
+   "source": [
+    "np.quantile(x,0.25)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 152,
+     "status": "ok",
+     "timestamp": 1675221288542,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "8VXDbiMC967n",
+    "outputId": "64ccc8a1-31f7-401d-c47b-bd4eaa0820a5"
+   },
+   "outputs": [],
+   "source": [
+    "np.quantile(x,[0.25,0.5,0.75]) # Primero, segundo y tercer cuartíl"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 161,
+     "status": "ok",
+     "timestamp": 1675221348553,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "CPaEbF9v-ERm",
+    "outputId": "f197463c-e572-4f43-cae4-3652a9a2dc27"
+   },
+   "outputs": [],
+   "source": [
+    "x.quantile([0.25,0.5,0.75])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.describe()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "El segundo cuartil es igual a la Mediana, un estadístico que también se puede considerar una medida de tendencia central. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x.quantile(0.5), x.median()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 159,
+     "status": "ok",
+     "timestamp": 1675221492112,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "4HhNMRak-j9P",
+    "outputId": "6d83ce4f-68a4-4972-89e0-31fa149e7247"
+   },
+   "outputs": [],
+   "source": [
+    "np.percentile(x,25) # Primer cuartíl"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "q1 = np.percentile(x, 25)\n",
+    "q2 = np.percentile(x, 50)  # Mediana\n",
+    "q3 = np.percentile(x, 75)\n",
+    "percentil_90 = np.percentile(x, 90)\n",
+    "decil_3 = np.percentile(x, 30)\n",
+    "print('Q1 (25%):', q1)\n",
+    "print('Q2 (Mediana, 50%):', q2)\n",
+    "print('Q3 (75%):', q3)\n",
+    "print('Percentil 90:', percentil_90)\n",
+    "print('Decil 3 (30%):', decil_3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### Rango intercuartílico"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "La diferencia entre el $Q_3$ y $Q_1$ es lo que llamamos Rango intercuartílico y lo representamos con $IQR$ por Inter-quartile range. Es una medida de dispersión de los datos, ya que representa el ancho del 50% central de los datos. Mientras más dispersos estén los datos, mayor será esta distancia.\n",
+    "\n",
+    "$$IQR=Q_3−Q_1$$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 266,
+     "status": "ok",
+     "timestamp": 1675820130130,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "u4Z8gr2AqJHE",
+    "outputId": "52fde262-a5e1-4112-c747-60ca65fb4ac3"
+   },
+   "outputs": [],
+   "source": [
+    "stats.iqr(x,rng=(0,100))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 182,
+     "status": "ok",
+     "timestamp": 1675820183081,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "_MwiYBy7qdu0",
+    "outputId": "cdaaab8e-1cf1-4738-fa9e-a9aa622022e2"
+   },
+   "outputs": [],
+   "source": [
+    "#@title Rango intercuartílico\n",
+    "stats.iqr(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 198,
+     "status": "ok",
+     "timestamp": 1675820266900,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "PMiv4rCBqqvr",
+    "outputId": "a6715d93-7cb0-4ed8-b372-39fb6f744081"
+   },
+   "outputs": [],
+   "source": [
+    "q1,q3=np.quantile(x,(0.25,0.75))\n",
+    "q1,q3"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 214,
+     "status": "ok",
+     "timestamp": 1675820275712,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "1naSHfzQq_N6",
+    "outputId": "72f1f6c3-0a3a-4c4c-ead7-04477bdf81d5"
+   },
+   "outputs": [],
+   "source": [
+    "q3-q1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 3,
+     "status": "ok",
+     "timestamp": 1675820340654,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "VpUlYTWSrBWj"
+   },
+   "outputs": [],
+   "source": [
+    "q1,q3=x.quantile([0.25,0.75])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 176,
+     "status": "ok",
+     "timestamp": 1675820346467,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "-eRsogj7rRNi",
+    "outputId": "5d901399-d849-479d-b95a-a4dcf24a470a"
+   },
+   "outputs": [],
+   "source": [
+    "q1,q3"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### Representación gráfica"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(6, 4))\n",
+    "plt.boxplot(x, vert=False, patch_artist=True, boxprops=dict(facecolor='lightblue'))\n",
+    "plt.title('Diagrama de cajas (Boxplot)')\n",
+    "plt.xlabel('alcohol')\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "1. En este caso la característica está representada en el eje x.\n",
+    "2. La línea vertical del medio de la caja, en \"amarillo\", es la mediana\n",
+    "3. La línea vertical izquierda de la caja es el 1er cuartil, y la línea vertical de la derecha es el 3er cuartil.\n",
+    "5. El ancho de la caja es el Rango intercuartílico $IQR$. Por lo tanto, mientras mayor sea la dispersión, más grande será la caja.\n",
+    "6. Los extremos de las líneas verticales, son llamados Bigotes son el mínimo y el máximo. Cuando hay valores atípicos, son los valores más bajos y altos que no sean valores atípicos.\n",
+    "7. Los valores atípicos se definen en este contexto como valores más altos que $Q_3+(1.5∗IQR)$\n",
+    " o más bajos que $Q_1−(1.5∗IQR)$. Estos valores se representan con puntos."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "glUWjCPVlhLr"
+   },
+   "source": [
+    "# Medidas de disperción"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Varianza y desviación estandar"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "La **varianza** y la **desviación estándar** son medidas de dispersión que indican cuánto se alejan los datos respecto a la media.\n",
+    "\n",
+    "$$ \\sigma^2 = \\frac{1}{n} \\sum_{i=1}^{n} (x_i - \\bar{x})^2 $$\n",
+    "\n",
+    "Para una muestra, la fórmula es:\n",
+    "\n",
+    "$$ s^2 = \\frac{1}{n-1} \\sum_{i=1}^{n} (x_i - \\bar{x})^2 $$\n",
+    "\n",
+    "Donde:\n",
+    "- $x_i$ son los valores de los datos.\n",
+    "- $\\bar{x}$ es la media.\n",
+    "- $n$ es el número de datos."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = np.array([10, 12, 15, 18, 20])\n",
+    "varianza_poblacional = x.var(ddof=0)\n",
+    "varianza_muestral = x.var(ddof=1)\n",
+    "desv_std_poblacional = x.std(ddof=0)\n",
+    "desv_std_muestral = x.std(ddof=1)\n",
+    "print('Varianza poblacional:', varianza_poblacional)\n",
+    "print('Varianza muestral:', varianza_muestral)\n",
+    "print('Desviación estándar poblacional:', desv_std_poblacional)\n",
+    "print('Desviación estándar muestral:', desv_std_muestral)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- `x.std(ddof=0)`: Calcula la desviación estándar considerando que los datos corresponden a toda la población. El divisor es $n$.\n",
+    "- `x.std(ddof=1)`: Calcula la desviación estándar muestral, es decir, cuando los datos son una muestra de una población más grande. El divisor es $n-1$ (corrección de Bessel).\n",
+    "\n",
+    "La corrección de Bessel (`ddof=1`) ajusta el sesgo en la estimación de la varianza y desviación estándar cuando se trabaja con muestras."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 176
+    },
+    "executionInfo": {
+     "elapsed": 196,
+     "status": "ok",
+     "timestamp": 1675819402758,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "RFnn0kBjljos",
+    "outputId": "7aea815d-4829-4380-da62-074ae6240ca6"
+   },
+   "outputs": [],
+   "source": [
+    "df.head(2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 192,
+     "status": "ok",
+     "timestamp": 1675819426807,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "6qKEccbrnsOm",
+    "outputId": "a90ebfe6-7bbc-458f-c4f6-5e90cfc577c5"
+   },
+   "outputs": [],
+   "source": [
+    "x.var() # Varianza muestral"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 7,
+     "status": "ok",
+     "timestamp": 1675819434734,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "IltXH6a9nyGE",
+    "outputId": "fd9d96d1-e6ed-4318-f3ea-9c8d94d41b14"
+   },
+   "outputs": [],
+   "source": [
+    "x.std() # Desviación estandar muestral"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 206,
+     "status": "ok",
+     "timestamp": 1675819466831,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "5g6TAT9dn4VB",
+    "outputId": "3276a8c7-8e8f-492f-adcc-c69bb3cc4e7a"
+   },
+   "outputs": [],
+   "source": [
+    "df.std()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 207,
+     "status": "ok",
+     "timestamp": 1675819532736,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "Cz0GseDVn73c",
+    "outputId": "a55ba2b6-d1fb-4349-a9ca-3597cf584f4e"
+   },
+   "outputs": [],
+   "source": [
+    "np.var(x) # Varianza del conjunto completo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 3,
+     "status": "ok",
+     "timestamp": 1675819537954,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "GC0eLJTgoL98",
+    "outputId": "cc343849-42c7-46cb-a18f-f0b1fb859af6"
+   },
+   "outputs": [],
+   "source": [
+    "np.std(x) # Std del conjunto completo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 176,
+     "status": "ok",
+     "timestamp": 1675819664961,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "KmXjzNaRooAi",
+    "outputId": "0943184a-01bf-4b9e-fc33-1ef86b153acb"
+   },
+   "outputs": [],
+   "source": [
+    "x.var(ddof=0) # Varianza del conjunto completo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 206,
+     "status": "ok",
+     "timestamp": 1675819773500,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "DHJCjQVGpCWp",
+    "outputId": "b392f561-aeca-485f-8c30-ea01fb3d1e41"
+   },
+   "outputs": [],
+   "source": [
+    "x.std(ddof=0) # Std del conjunto completo"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Recorrido max-min"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Es una medida de dispersión que se calcula como la diferencia entre el valor máximo y el valor mínimo de un conjunto de datos.\n",
+    "\n",
+    "$$ R = x_{\\text{max}} - x_{\\text{min}} $$\n",
+    "\n",
+    "Donde:\n",
+    "- $x_{\\text{max}}$ es el valor máximo del conjunto de datos.\n",
+    "- $x_{\\text{min}}$ es el valor mínimo del conjunto de datos.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 190,
+     "status": "ok",
+     "timestamp": 1675819843542,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "B3yahJ6EpGr0",
+    "outputId": "bce50ccf-151b-49d1-bd27-93ae37984254"
+   },
+   "outputs": [],
+   "source": [
+    "# Rango\n",
+    "x.max()-x.min() # Desde Pandas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 185,
+     "status": "ok",
+     "timestamp": 1675819874482,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "knNhvgArpX10",
+    "outputId": "89ab45e3-41a1-4d61-c73e-039ef18d22b3"
+   },
+   "outputs": [],
+   "source": [
+    "np.max(x)-np.min(x) # Desde Numpy"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 228,
+     "status": "ok",
+     "timestamp": 1675819896295,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "OHfDdtFapfat",
+    "outputId": "9e561661-33f1-4ee0-f511-384a5ad73a71"
+   },
+   "outputs": [],
+   "source": [
+    "max(x)-min(x) # "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 184,
+     "status": "ok",
+     "timestamp": 1675819918403,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "qelPpUmTpkts",
+    "outputId": "7dda7183-7b8f-415e-8e65-b32fb06addcd"
+   },
+   "outputs": [],
+   "source": [
+    "np.ptp(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 201,
+     "status": "ok",
+     "timestamp": 1675819957963,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "GJ5ORbUZpqG8",
+    "outputId": "8ca72c78-ad8f-45d4-ce52-133d992f6a8a"
+   },
+   "outputs": [],
+   "source": [
+    "df.max()-df.min()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 193,
+     "status": "ok",
+     "timestamp": 1675820007086,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "ycSHJhETpzxU",
+    "outputId": "aef62374-632e-43d1-c8a1-f1d00807c170"
+   },
+   "outputs": [],
+   "source": [
+    "np.max(df,axis=0)-np.min(df,axis=0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "El recorrido max-min:\n",
+    "\n",
+    "- Es muy fácil y rápido de calcular.\n",
+    "- Permite obtener una idea rápida de la dispersión total de los datos.\n",
+    "- Es útil para comparar la variabilidad entre diferentes conjuntos de datos.\n",
+    "- No requiere cálculos complejos ni fórmulas avanzadas."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Coeficiente de variación de Pearson"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Es una medida relativa de dispersión que indica el grado de variabilidad de los datos respecto a su media. Se expresa como un porcentaje y permite comparar la dispersión entre diferentes conjuntos de datos, incluso si tienen unidades o medias distintas.\n",
+    "\n",
+    "$$ CV = \\frac{\\sigma}{\\bar{x}} \\times 100 $$\n",
+    "\n",
+    "Donde:\n",
+    "- $\\sigma$ es la desviación estándar.\n",
+    "- $\\bar{x}$ es la media.\n",
+    "\n",
+    "\n",
+    "- Un CV bajo indica que los datos están poco dispersos respecto a la media.\n",
+    "- Un CV alto indica mayor dispersión relativa.\n",
+    "\n",
+    "Supongamos que tenemos dos conjuntos de datos con:\n",
+    "\n",
+    "- A: media = 50, desviación estándar = 5 → CV = (5/50)*100 = 10%\n",
+    "- B: media = 100, desviación estándar = 20 → CV = (20/100)*100 = 20%\n",
+    "\n",
+    "Podemos concluir que el conjunto B es relativamente más disperso que el conjunto A."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 167,
+     "status": "ok",
+     "timestamp": 1675820441451,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "B5CuaRYArSok",
+    "outputId": "bb5fabdf-a2ff-41ee-d776-d882a137ba64"
+   },
+   "outputs": [],
+   "source": [
+    "# Coeficiente de variación de Pearson\n",
+    "stats.variation(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 186,
+     "status": "ok",
+     "timestamp": 1675820466008,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "xe1EUmwgrp1D",
+    "outputId": "6e015f7f-d414-4a41-d66e-5548f4240db9"
+   },
+   "outputs": [],
+   "source": [
+    "stats.variation(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 162,
+     "status": "ok",
+     "timestamp": 1675820580032,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "NkqebWWprv0j",
+    "outputId": "615f0166-0b76-4f79-a320-5dc8c3deca12"
+   },
+   "outputs": [],
+   "source": [
+    "df.std(ddof=0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 177,
+     "status": "ok",
+     "timestamp": 1675820629649,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "SggybuTSsGyG",
+    "outputId": "0d09c854-8633-4994-b11d-e533b809b820"
+   },
+   "outputs": [],
+   "source": [
+    "x.std(ddof=0)/np.abs(x.mean())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "hqjVW-GowiDv"
+   },
+   "source": [
+    "# Medidas de forma"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Las **medidas de forma** describen la forma de la distribución de los datos, permitiendo identificar si los datos están sesgados (asimetría) o si presentan colas y picos más o menos pronunciados que una distribución normal (curtosis).\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Asimetría (skewness)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Formalmente, decimos que una distribución de frecuencias es simétrica si la media aritmética $\\bar{X}$ es igual a la mediana $X_M$. Esto significa que en cualquier otro caso, la distribución es asimétrica.\n",
+    "\n",
+    "**Tercer momento central**\n",
+    "\n",
+    "El $k$-ésimo momento central de una variable aleatoria $X$ es:\n",
+    "\n",
+    "$$ \\mu_k = \\frac{1}{n} \\sum_{i=1}^{n} (x_i - \\bar{x})^k $$\n",
+    "\n",
+    "Para $k=3$ (tercer momento central):\n",
+    "\n",
+    "$$ \\mu_3 = \\frac{1}{n} \\sum_{i=1}^{n} (x_i - \\bar{x})^3 $$\n",
+    "\n",
+    "La asimetría se define como:\n",
+    "\n",
+    "$$ \\text{Asimetría} = \\gamma_1 = \\frac{\\mu_3}{\\sigma^3} $$\n",
+    "\n",
+    "Donde:\n",
+    "- $\\mu_3$ es el tercer momento central.\n",
+    "- $\\sigma$ es la desviación estándar.\n",
+    "\n",
+    "Esta fórmula permite cuantificar la asimetría de una distribución en función de sus momentos centrales.\n",
+    "> Si $\\text{Asimetría}=0$, la distribución es simétrica.\n",
+    "\n",
+    "> Si $\\text{Asimetría}>0$, la cola derecha es más larga (asimetría a la derecha).\n",
+    "\n",
+    "> Si $\\text{Asimetría}<0$, la cola izquierda es más larga (asimetría a la izquierda)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "np.random.seed(0)\n",
+    "\n",
+    "#Datos Simétricos\n",
+    "datos_simetricos = np.random.normal(loc=0, scale=1, size=1000)\n",
+    "media_sim = np.mean(datos_simetricos)\n",
+    "mediana_sim = np.median(datos_simetricos)\n",
+    "\n",
+    "#datos asimétricos positivos (distribución exponencial)\n",
+    "datos_asim_pos = np.random.exponential(scale=1, size=1000)\n",
+    "media_pos = np.mean(datos_asim_pos)\n",
+    "mediana_pos = np.median(datos_asim_pos)\n",
+    "\n",
+    "# Datos asimétricos negativos (simulación: invertir exponencial)\n",
+    "datos_asim_neg = -np.random.exponential(scale=1, size=1000)\n",
+    "media_neg = np.mean(datos_asim_neg)\n",
+    "mediana_neg = np.median(datos_asim_neg)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, axs = plt.subplots(1, 3, figsize=(18, 4))\n",
+    "# Gráfica simétrica\n",
+    "axs[0].hist(datos_simetricos, bins=30, color='skyblue', edgecolor='black', alpha=0.7)\n",
+    "axs[0].axvline(media_sim, color='red', linestyle='dashed', linewidth=2, label=f'Media: {media_sim:.2f}')\n",
+    "axs[0].axvline(mediana_sim, color='green', linestyle='dashed', linewidth=2, label=f'Mediana: {mediana_sim:.2f}')\n",
+    "axs[0].set_title('Simétrica (Normal)')\n",
+    "axs[0].legend()\n",
+    "\n",
+    "# Gráfica asimetría positiva\n",
+    "axs[1].hist(datos_asim_pos, bins=30, color='orange', edgecolor='black', alpha=0.7)\n",
+    "axs[1].axvline(media_pos, color='red', linestyle='dashed', linewidth=2, label=f'Media: {media_pos:.2f}')\n",
+    "axs[1].axvline(mediana_pos, color='green', linestyle='dashed', linewidth=2, label=f'Mediana: {mediana_pos:.2f}')\n",
+    "axs[1].set_title('Asimetría positiva (cola derecha)')\n",
+    "axs[1].legend()\n",
+    "\n",
+    "# Gráfica asimetría negativa\n",
+    "axs[2].hist(datos_asim_neg, bins=30, color='purple', edgecolor='black', alpha=0.7)\n",
+    "axs[2].axvline(media_neg, color='red', linestyle='dashed', linewidth=2, label=f'Media: {media_neg:.2f}')\n",
+    "axs[2].axvline(mediana_neg, color='green', linestyle='dashed', linewidth=2, label=f'Mediana: {mediana_neg:.2f}')\n",
+    "axs[2].set_title('Asimetría negativa (cola izquierda)')\n",
+    "axs[2].legend()\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Graficamos la distribución de nuestros datos\n",
+    "plt.hist(df['alcohol']);"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 3,
+     "status": "ok",
+     "timestamp": 1675821777972,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "N-cU4s_owkfK",
+    "outputId": "fd89d67b-fc30-4bc7-af65-d3f3f42509e5"
+   },
+   "outputs": [],
+   "source": [
+    "# (Simetría/Sesgo) de la caracterísitca 'alcohol'\n",
+    "df['alcohol'].skew()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 133,
+     "status": "ok",
+     "timestamp": 1675821916653,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "-bRLOjdixKcr",
+    "outputId": "c70e3fbb-64ba-4bd4-a3ea-66471d7023e4"
+   },
+   "outputs": [],
+   "source": [
+    "df.skew()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 282
+    },
+    "executionInfo": {
+     "elapsed": 191,
+     "status": "ok",
+     "timestamp": 1675821990923,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "-8mHnVbgxSA6",
+    "outputId": "62ccc9e1-38c0-4ce5-bb3a-31ec70f73bb8"
+   },
+   "outputs": [],
+   "source": [
+    "df['magnesium'].hist()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 282
+    },
+    "executionInfo": {
+     "elapsed": 646,
+     "status": "ok",
+     "timestamp": 1675822021497,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "J-vYK6qIxh2y",
+    "outputId": "609f9394-04e3-4b04-ecec-1e957ae7474b"
+   },
+   "outputs": [],
+   "source": [
+    "df['od280/od315_of_diluted_wines'].hist()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Curtósis"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Otra medida de forma es la **curtosis**, relacionada con el peso de las colas y la concentración central. Hay dos convenciones frecuentes:\n",
+    "\n",
+    "- **Curtosis de Pearson:** una normal tiene valor 3.\n",
+    "- **Curtosis excedente:** se resta 3, por lo que una normal tiene valor 0.\n",
+    "\n",
+    "`pandas.Series.kurt()` y `scipy.stats.kurtosis()` usan por defecto la curtosis excedente (`fisher=True`). Por eso no se debe comparar directamente su resultado con la afirmación \"una normal vale 3\" sin ajustar la convención.\n",
+    "\n",
+    "La curtosis orienta sobre colas y valores extremos, pero no es una prueba de normalidad por sí sola."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Distribución mesocúrtica (normal)\n",
+    "np.random.seed(0)\n",
+    "mesocurtica = np.random.normal(loc=0, scale=1, size=1000)\n",
+    "media_meso = np.mean(mesocurtica)\n",
+    "mediana_meso = np.median(mesocurtica)\n",
+    "\n",
+    "# Distribución leptocúrtica (Laplace: picos altos y colas largas)\n",
+    "leptocurtica = np.random.laplace(loc=0, scale=0.5, size=1000)\n",
+    "media_lepto = np.mean(leptocurtica)\n",
+    "mediana_lepto = np.median(leptocurtica)\n",
+    "\n",
+    "# Distribución platicúrtica (Uniforme: picos bajos y colas cortas)\n",
+    "platicurtica = np.random.uniform(low=-2, high=2, size=1000)\n",
+    "media_plati = np.mean(platicurtica)\n",
+    "mediana_plati = np.median(platicurtica)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, axs = plt.subplots(1, 3, figsize=(18, 4))\n",
+    "\n",
+    "# Mesocúrtica\n",
+    "axs[0].hist(mesocurtica, bins=30, color='skyblue', edgecolor='black', alpha=0.7)\n",
+    "axs[0].axvline(media_meso, color='red', linestyle='dashed', linewidth=2, label=f'Media: {media_meso:.2f}')\n",
+    "axs[0].axvline(mediana_meso, color='green', linestyle='dashed', linewidth=2, label=f'Mediana: {mediana_meso:.2f}')\n",
+    "axs[0].set_title('Mesocúrtica (Normal)')\n",
+    "axs[0].legend()\n",
+    "\n",
+    "# Leptocúrtica\n",
+    "axs[1].hist(leptocurtica, bins=30, color='orange', edgecolor='black', alpha=0.7)\n",
+    "axs[1].axvline(media_lepto, color='red', linestyle='dashed', linewidth=2, label=f'Media: {media_lepto:.2f}')\n",
+    "axs[1].axvline(mediana_lepto, color='green', linestyle='dashed', linewidth=2, label=f'Mediana: {mediana_lepto:.2f}')\n",
+    "axs[1].set_title('Leptocúrtica (Laplace)')\n",
+    "axs[1].legend()\n",
+    "\n",
+    "# Platicúrtica\n",
+    "axs[2].hist(platicurtica, bins=30, color='purple', edgecolor='black', alpha=0.7)\n",
+    "axs[2].axvline(media_plati, color='red', linestyle='dashed', linewidth=2, label=f'Media: {media_plati:.2f}')\n",
+    "axs[2].axvline(mediana_plati, color='green', linestyle='dashed', linewidth=2, label=f'Mediana: {mediana_plati:.2f}')\n",
+    "axs[2].set_title('Platicúrtica (Uniforme)')\n",
+    "axs[2].legend()\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 133,
+     "status": "ok",
+     "timestamp": 1675822130961,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "7BWzN0v3yAR5",
+    "outputId": "b7c4e118-05e0-4b4c-e976-eb3eeefed126"
+   },
+   "outputs": [],
+   "source": [
+    "curtosis_excedente = df['alcohol'].kurt()\n",
+    "curtosis_pearson = curtosis_excedente + 3\n",
+    "print(f'Curtosis excedente: {curtosis_excedente:.3f}')\n",
+    "print(f'Curtosis de Pearson: {curtosis_pearson:.3f}')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 136,
+     "status": "ok",
+     "timestamp": 1675822171855,
+     "user": {
+      "displayName": "Carlos Arellano",
+      "userId": "03055712073717640513"
+     },
+     "user_tz": 360
+    },
+    "id": "kUjr-Ex8yGUy",
+    "outputId": "0d4a23fc-751c-4a35-f4c9-eef461364c52"
+   },
+   "outputs": [],
+   "source": [
+    "df.kurt()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.drop(columns='target').hist(figsize=(14, 10), bins=12)\n",
+    "plt.tight_layout()\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Los datos reales son más complejos que la teoría, incluso estos que son batante sencillos. Se recomienda siempre acompañar el análisis de la asimetría con algún gráfico como un histograma, un diagrama de cajas, un polígono de frecuencias, etc."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    "### Práctica de Laboratorio\n",
+    "\n",
+    "1. Elige dos variables del dataset con formas diferentes. Compara sus histogramas y diagramas de caja.\n",
+    "2. Calcula para cada una media, mediana, desviación estándar, `Q1`, `Q3`, `IQR`, asimetría y curtosis excedente.\n",
+    "3. Crea una función `diagnostico_distribucion(serie)` que devuelva una fila con `media`, `mediana`, `desviacion`, `q1`, `q3`, `iqr`, `asimetria` y `curtosis_excedente`. Aplícala a todas las características numéricas y ordena el resultado por asimetría absoluta.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "colab": {
+   "authorship_tag": "ABX9TyMMCOzfKTu0WXBeOWxUgxmK",
+   "provenance": []
+  },
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+
+======================================================================
+ARCHIVO: .\3.3.- Estandarizacion y Normalización de Datos.ipynb
+======================================================================
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "38a3b3a8",
+   "metadata": {
+    "id": "38a3b3a8",
+    "language": "markdown"
+   },
+   "source": [
+    "<div style=\"background: linear-gradient(120deg, #1a3a5c 0%, #2d6a9f 60%, #4a9eda 100%); padding: 28px 36px; border-radius: 14px; display: flex; align-items: center; gap: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.18);\">\n",
+    "    <img src='Figures/iteso.jpg' style='height: 110px; border-radius: 8px; background: white; padding: 6px; flex-shrink: 0;'/>\n",
+    "    <div style='border-left: 2px solid rgba(255,255,255,0.4); padding-left: 28px;'>\n",
+    "        <h1 style='margin: 0 0 8px 0; color: white; font-size: 1.5em;'>Ingeniería y Ciencia de Datos</h1>\n",
+    "        <h3 style='margin: 0 0 8px 0; color: white; font-size: 1.5em;'>Laboratorio de Procesamiento de Datos</h3>\n",
+    "        <h3 style='margin: 0; color: rgba(255,255,255,0.8); font-weight: normal; font-size: 1.05em;'>Módulo 2: Estandarización y Normalización de datos</h3>\n",
+    "    </div>\n",
+    "</div>\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f734a664",
+   "metadata": {
+    "id": "f734a664",
+    "language": "markdown"
+   },
+   "source": [
+    "La estandarización y la normalización cambian la escala de las variables numéricas para facilitar la comparación de sus valores\n",
+    "\n",
+    "## 1. ¿Por qué cambiar la escala de los datos?\n",
+    "\n",
+    "Imagina un reporte con **tiempo de entrega en minutos**, **importe en pesos** y **distancia en kilómetros**. Un cambio de 100 pesos y uno de 2 kilómetros no se pueden comparar por su tamaño numérico: tienen unidades y significados distintos. Incluso medir la misma distancia en metros hace que su número sea mil veces mayor, sin que el viaje cambie.\n",
+    "\n",
+    "> Cambiar de escala es útil para:\n",
+    "- Comparar **posiciones relativas**: saber si un valor está cerca o lejos de lo habitual en su columna.\n",
+    "- Construir gráficas con un rango común cuando la pregunta lo requiere.\n",
+    "- Expresar medidas en una referencia consistente para comparar periodos o grupos.\n",
+    "- Evitar confundir un número grande con mayor importancia.\n",
+    "\n",
+    "**No siempre es necesario.** Si queremos informar cuánto mide un pétalo, su longitud en centímetros es más interpretable que una puntuación transformada. Escalar no corrige errores, no elimina faltantes ni hace compatibles magnitudes distintas para sumarlas.\n",
+    "\n",
+    "\n",
+    "- **Normalización min–max:** expresa la posición dentro de un rango de referencia, habitualmente [0,1].\n",
+    "- **Estandarización z:** expresa la distancia a la media en unidades de desviación estándar.\n",
+    "\n",
+    "> *Normalización* es una palabra ambigua: algunas fuentes la usan para min–max y otras para operaciones por fila. Aquí siempre indicaremos la fórmula. Ningún reescalamiento lineal garantiza que los datos se vuelvan normales.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f4e1120b-f050-49ad-a82f-897cbe14f617",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "from IPython.display import display\n",
+    "from sklearn.datasets import load_wine, load_iris\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6ca92769",
+   "metadata": {
+    "id": "6ca92769",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "def mostrar_transformacion(original, resultado, columna, titulo):\n",
+    "    display(pd.DataFrame({\n",
+    "        'Original': original[columna],\n",
+    "        'Transformado': resultado[columna],\n",
+    "    }).head(6).round(4))\n",
+    "    figura, ejes = plt.subplots(1, 2, figsize=(10, 3.5))\n",
+    "    for eje, serie, etiqueta in zip(ejes, [original[columna], resultado[columna]], ['Original', 'Transformado']):\n",
+    "        eje.hist(serie.dropna(), bins=12, color='#176b87', edgecolor='white')\n",
+    "        eje.set(title=etiqueta, xlabel=columna, ylabel='Observaciones')\n",
+    "    figura.suptitle(titulo)\n",
+    "    figura.tight_layout()\n",
+    "    plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ba8c1ad9",
+   "metadata": {
+    "id": "ba8c1ad9",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "wine = load_wine(as_frame=True)\n",
+    "vinos = wine.data.copy()\n",
+    "columnas = ['alcohol', 'color_intensity', 'proline']\n",
+    "datos = vinos[columnas].copy()\n",
+    "\n",
+    "datos.head()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "78e57775-4dbc-4270-bbe3-3cfc71441383",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "datos.describe().T[['min', 'max', 'mean', 'std']].round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "12e3b338",
+   "metadata": {
+    "id": "12e3b338",
+    "language": "markdown"
+   },
+   "source": [
+    "## 2. Normalización min–max: posición dentro de un rango\n",
+    "\n",
+    "**Pregunta:** ¿dónde queda el largo de un pétalo entre el mínimo y el máximo observados?\n",
+    "\n",
+    "$$x_{norm}=\\frac{x-x_{min}}{x_{max}-x_{min}}$$\n",
+    "\n",
+    "### Ejemplo numérico\n",
+    "Si el mínimo fuera 1 cm, el máximo 5 cm y un pétalo midiera 3 cm: $(3-1)/(5-1)=0.5$. Está a la mitad del **rango**, no necesariamente en la mediana ni en el percentil 50. Estos números son un ejemplo de cálculo; abajo usamos Iris real.\n",
+    "\n",
+    "Cargamos Iris y aplicamos la fórmula por columna. Restar una Series a un DataFrame alinea cada parámetro con el nombre de su columna.\n",
+    "\n",
+    "**Cómo leer el resultado:** en los datos utilizados como referencia, el menor valor será 0 y el mayor 1. Para obtener [0,100], multiplica el resultado por 100; para [a,b], usa $a+(b-a)x_{norm}$.\n",
+    "\n",
+    "**Ventaja:** escala fácil de leer y útil para comparar posiciones dentro del rango de cada variable.\n",
+    "\n",
+    "**Limitaciones:** depende de mínimos y máximos; un extremo puede comprimir al resto. Una observación nueva puede quedar fuera de [0,1]. Si máximo=mínimo, la fórmula no está definida.\n",
+    "\n",
+    "**Pregunta breve:** si duplicamos todas las medidas en centímetros, ¿se modifica su posición min–max?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5ff6dbe6",
+   "metadata": {
+    "id": "5ff6dbe6",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "iris = load_iris(as_frame=True)\n",
+    "flores = iris.data.rename(columns={\n",
+    "    'sepal length (cm)': 'largo_sepalo_cm',\n",
+    "    'sepal width (cm)': 'ancho_sepalo_cm',\n",
+    "    'petal length (cm)': 'largo_petalo_cm',\n",
+    "    'petal width (cm)': 'ancho_petalo_cm',\n",
+    "}).copy()\n",
+    "\n",
+    "minimos_iris = flores.min()\n",
+    "rangos_iris = flores.max() - minimos_iris\n",
+    "flores_minmax = (flores - minimos_iris) / rangos_iris\n",
+    "\n",
+    "mostrar_transformacion(flores, flores_minmax, 'largo_petalo_cm', 'Min–max: posición del pétalo en su rango observado')\n",
+    "pd.DataFrame({'min_transformado': flores_minmax.min(), 'max_transformado': flores_minmax.max()})\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7b87ec39",
+   "metadata": {
+    "id": "7b87ec39",
+    "language": "markdown"
+   },
+   "source": [
+    "## 3. Estandarización z: distancia respecto a lo habitual\n",
+    "\n",
+    "**Pregunta:** ¿el contenido de alcohol de un vino está cerca o lejos del promedio de estos vinos?\n",
+    "\n",
+    "$$z=\\frac{x-\\bar{x}}{s}$$\n",
+    "\n",
+    "### Ejemplo numérico con Wine\n",
+    "Para el primer vino, alcohol=14.23. La media es aproximadamente 13.00 y la desviación 0.81: $z\\approx(14.23-13.00)/0.81\\approx1.52$. Significa **1.52 desviaciones estándar por encima de la media**, no 152% ni 1.52 unidades originales.\n",
+    "\n",
+    "Calculamos media y desviación de cada columna de Wine. Usaremos `std(ddof=0)` de forma consistente: divide entre $n$. El valor por defecto de pandas es `ddof=1`, que divide entre $n-1$. No hay que mezclar la convención de cálculo con la de comprobación.\n",
+    "\n",
+    "**Interpretación:** z=0 corresponde a la media; z negativo significa estar por debajo, no que la medida original sea negativa. En la referencia utilizada, la media de z es 0 y su desviación es 1.\n",
+    "\n",
+    "**Ventaja:** expresa diferencias en una unidad relativa común; permite comparar qué tan alejada del centro está cada medida.\n",
+    "\n",
+    "**Limitaciones:** media y desviación son sensibles a extremos, el rango no es fijo y una columna constante tiene desviación cero. No convierte una distribución en normal ni autoriza interpretar z como una probabilidad sin supuestos adicionales.\n",
+    "\n",
+    "**Pregunta breve:** ¿z=0 coincide siempre con la mediana?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8ea3c2dd",
+   "metadata": {
+    "id": "8ea3c2dd",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "medias_wine = datos.mean()\n",
+    "std_wine = datos.std(ddof=0)\n",
+    "vinos_z = (datos - medias_wine) / std_wine\n",
+    "\n",
+    "mostrar_transformacion(datos, vinos_z, 'alcohol', 'Z: distancia al promedio en desviaciones estándar')\n",
+    "pd.DataFrame({'media_z': vinos_z.mean(), 'std_z_ddof0': vinos_z.std(ddof=0)}).round(6)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "21249ea4-69f8-49ec-bb70-a592ddde1c62",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print('Alcohol del primer vino:', datos.loc[0, 'alcohol'])\n",
+    "print('Z de ese mismo valor:', round(vinos_z.loc[0, 'alcohol'], 3))\n",
+    "\n",
+    "recuperados = vinos_z * std_wine + medias_wine\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e8d6216d",
+   "metadata": {
+    "id": "e8d6216d",
+    "language": "markdown"
+   },
+   "source": [
+    "#### cambiar la escala no cambia todo\n",
+    "\n",
+    "En min–max y z hemos aplicado una transformación lineal con divisor positivo. Cambian las unidades del eje, pero se conserva el orden de las observaciones y la forma general de la distribución. Un histograma con nuevos números en el eje horizontal no demuestra que se haya alcanzado normalidad.\n",
+    "\n",
+    "Hasta aquí hemos visto que:\n",
+    "- **Min–max:** posición respecto al mínimo y al máximo.\n",
+    "- **Z:** posición respecto a la media y la desviación.\n",
+    "\n",
+    "Sin embargo, Los valores extremos pueden afectar esas referencias. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3b438808",
+   "metadata": {
+    "id": "3b438808",
+    "language": "markdown"
+   },
+   "source": [
+    "## 4. Escalamiento robusto: mediana y rango intercuartílico\n",
+    "\n",
+    "**Pregunta:** ¿cómo expresar posiciones relativas sin depender tanto de valores muy extremos?\n",
+    "\n",
+    "$$r=\\frac{x-\\operatorname{mediana}(x)}{IQR},\\qquad IQR=Q_3-Q_1$$\n",
+    "\n",
+    "### Ejemplo numérico con Wine\n",
+    "Para prolina, mediana=673.5 e IQR=484.5. El primer vino tiene 1065: $(1065-673.5)/484.5\\approx0.808$. Se encuentra **0.808 rangos intercuartílicos por encima de la mediana**.\n",
+    "\n",
+    "`median()` calcula el centro y `quantile(0.75)-quantile(0.25)` la amplitud del 50% central. Se usan todos los vinos como referencia, sin borrar observaciones.\n",
+    "\n",
+    "**Ventaja:** sus parámetros suelen cambiar menos que media y desviación al aparecer unos pocos extremos.\n",
+    "\n",
+    "**Limitaciones:** no elimina atípicos ni los comprime automáticamente; el rango sigue abierto, la media no necesariamente queda en cero y no se puede dividir entre IQR=0. Robustez no significa inmunidad, especialmente en muestras pequeñas.\n",
+    "\n",
+    "Después del ejemplo real añadiremos una prolina **artificial** de 30000 solo para comparar cómo cambian los parámetros; no pertenece al dataset original.\n",
+    "\n",
+    "**Pregunta breve:** si el robusto de un valor es 20, ¿el método falló o el dato está lejos de la referencia central?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "90dc14da",
+   "metadata": {
+    "id": "90dc14da",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "medianas_wine = datos.median()\n",
+    "iqr_wine = datos.quantile(0.75) - datos.quantile(0.25)\n",
+    "vinos_robusto = (datos - medianas_wine) / iqr_wine\n",
+    "\n",
+    "mostrar_transformacion(datos, vinos_robusto, 'proline', 'Robusto: distancia a la mediana en unidades de IQR')\n",
+    "pd.DataFrame({\n",
+    "    'mediana_transformada': vinos_robusto.median(),\n",
+    "    'IQR_transformado': vinos_robusto.quantile(0.75) - vinos_robusto.quantile(0.25),\n",
+    "    'std_transformada': vinos_robusto.std(ddof=0),\n",
+    "}).round(4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f217e793-a8f2-4ef8-a7c1-03e25663fde8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "prolina_con_extremo = pd.concat([datos['proline'], pd.Series([30000.0], index=['artificial'])])\n",
+    "comparacion_parametros = pd.DataFrame({\n",
+    "    'Datos reales': [datos['proline'].mean(), datos['proline'].std(ddof=0), datos['proline'].median(), iqr_wine['proline']],\n",
+    "    'Con extremo artificial': [prolina_con_extremo.mean(), prolina_con_extremo.std(ddof=0), prolina_con_extremo.median(), prolina_con_extremo.quantile(0.75) - prolina_con_extremo.quantile(0.25)],\n",
+    "}, index=['Media', 'Desviación', 'Mediana', 'IQR'])\n",
+    "comparacion_parametros.round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "242eabc4",
+   "metadata": {
+    "id": "242eabc4",
+    "language": "markdown"
+   },
+   "source": [
+    "## 5. Máximo absoluto: conservar el cero y el signo\n",
+    "\n",
+    "**Pregunta:** ¿cómo reducir la amplitud numérica sin restar un centro?\n",
+    "\n",
+    "$$x_{abs}=\\frac{x}{\\max(|x|)}$$\n",
+    "\n",
+    "### Ejemplo numérico\n",
+    "Para cambios de temperatura hipotéticos de [-6, 0, 3], el máximo absoluto es 6 y el resultado es [-1, 0, 0.5]. El cero sigue siendo cero y los negativos siguen siendo negativos.\n",
+    "\n",
+    "Las longitudes de Iris son positivas. Dividiremos cada columna entre su propio máximo absoluto. Así el máximo queda en 1, pero **el mínimo no tiene por qué ser 0**: esta es la diferencia con min–max.\n",
+    "\n",
+    "**Ventaja:** no desplaza el cero original y mantiene el signo. En datos con muchos ceros, no los convierte en otros valores por restar una media.\n",
+    "\n",
+    "**Limitaciones:** depende de extremos, no centra en cero ni iguala desviaciones. El intervalo [-1,1] corresponde a la referencia usada; nuevas observaciones pueden excederlo. Una columna de puros ceros necesita una política explícita, porque su divisor es cero.\n",
+    "\n",
+    "**Pregunta breve:** si todas las longitudes son positivas, ¿por qué sus mínimos transformados también pueden ser positivos?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a62876d3",
+   "metadata": {
+    "id": "a62876d3",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "maximos_abs_iris = flores.abs().max()\n",
+    "flores_maxabs = flores / maximos_abs_iris\n",
+    "\n",
+    "mostrar_transformacion(flores, flores_maxabs, 'ancho_petalo_cm', 'MaxAbs: cambia amplitud sin restar una referencia')\n",
+    "pd.DataFrame({\n",
+    "    'min_transformado': flores_maxabs.min(),\n",
+    "    'max_abs_transformado': flores_maxabs.abs().max(),\n",
+    "}).round(4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "363fd6f6-fdd5-4b69-bd28-ee6d4e8d0610",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cambios_hipoteticos = pd.Series([-6.0, 0.0, 3.0], name='cambio_temperatura')\n",
+    "cambios_maxabs = cambios_hipoteticos / cambios_hipoteticos.abs().max()\n",
+    "pd.DataFrame({'Cambio hipotético': cambios_hipoteticos, 'MaxAbs': cambios_maxabs})\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1e3d01c8",
+   "metadata": {
+    "id": "1e3d01c8",
+    "language": "markdown"
+   },
+   "source": [
+    "## 6. Escalamiento decimal: reducir órdenes de magnitud\n",
+    "\n",
+    "**Pregunta:** ¿cómo llevar números grandes a magnitudes menores que 1 con una regla sencilla?\n",
+    "\n",
+    "$$x_{dec}=\\frac{x}{10^j},\\qquad j\\geq0\\text{ es el menor entero que permite }\\max(|x_{dec}|)<1$$\n",
+    "\n",
+    "### Ejemplo numérico con Wine\n",
+    "La prolina máxima es 1680. Dividir entre 1000 deja 1.68, por lo que todavía no cumple la regla. Dividir entre 10000 deja 0.168; usaremos $j=4$. Un valor de 1065 se convierte en 0.1065.\n",
+    "\n",
+    "La desigualdad es estricta en esta clase: un máximo de 100 debe dividirse entre 1000, no entre 100. Para una columna de ceros, elegimos j=0.\n",
+    "\n",
+    "Para cada columna, aumentamos el exponente hasta que la magnitud máxima quede por debajo de 1. La fórmula será distinta entre columnas porque sus máximos pueden tener diferentes órdenes de magnitud.\n",
+    "\n",
+    "**Ventaja:** procedimiento sencillo; conserva orden, signos y cero. Es útil si interesa una convención explícita de potencias de diez.\n",
+    "\n",
+    "**Limitaciones:** no centra ni iguala dispersiones, depende del mayor valor y puede cambiar bruscamente al cruzar una potencia de diez. La posición decimal de un número no indica su importancia.\n",
+    "\n",
+    "**Pregunta breve:** ¿por qué un máximo 99 y uno 100 pueden exigir exponentes distintos?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b304c780",
+   "metadata": {
+    "id": "b304c780",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "maximos_abs_wine = datos.abs().max()\n",
+    "exponentes = pd.Series(0, index=datos.columns, dtype=int)\n",
+    "for columna in datos.columns:\n",
+    "    while maximos_abs_wine[columna] / (10.0 ** exponentes[columna]) >= 1:\n",
+    "        exponentes[columna] += 1\n",
+    "\n",
+    "divisores_decimales = 10.0 ** exponentes\n",
+    "vinos_decimal = datos / divisores_decimales\n",
+    "\n",
+    "pd.DataFrame({\n",
+    "    'max_abs_original': maximos_abs_wine,\n",
+    "    'exponente_j': exponentes,\n",
+    "    'divisor': divisores_decimales,\n",
+    "    'max_abs_transformado': vinos_decimal.abs().max(),\n",
+    "})\n",
+    "mostrar_transformacion(datos, vinos_decimal, 'proline', 'Decimal: prolina dividida entre 10000')\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "134c6e35",
+   "metadata": {
+    "id": "134c6e35",
+    "language": "markdown"
+   },
+   "source": [
+    "## 7. Centrado: diferencias en la unidad original\n",
+    "\n",
+    "**Pregunta:** ¿cuántos centímetros por encima o por debajo del promedio mide un pétalo?\n",
+    "\n",
+    "$$x_c=x-\\bar{x}$$\n",
+    "\n",
+    "### Ejemplo numérico\n",
+    "Si el promedio de una medida fuera 4 cm y una flor midiera 5.5 cm, el valor centrado sería 1.5 cm. Es una **diferencia en centímetros**, no en desviaciones ni en una fracción del rango.\n",
+    "\n",
+    "Restaremos la media de cada columna. La media queda en 0, pero la desviación se conserva. Centrar es parte del proceso de z, **no una estandarización completa**.\n",
+    "\n",
+    "**Ventaja:** expresa diferencias fáciles de interpretar y conserva la unidad original.\n",
+    "\n",
+    "**Limitaciones:** no iguala dispersiones, depende de la media y no acota el rango. No basta para comparar medidas con unidades distintas.\n",
+    "\n",
+    "**Pregunta breve:** ¿qué operación le falta al centrado para obtener puntuación z?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9a588946",
+   "metadata": {
+    "id": "9a588946",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "medias_iris = flores.mean()\n",
+    "flores_centradas = flores - medias_iris\n",
+    "\n",
+    "mostrar_transformacion(flores, flores_centradas, 'largo_petalo_cm', 'Centrado: diferencias respecto a la media, todavía en cm')\n",
+    "pd.DataFrame({\n",
+    "    'media_original': flores.mean(),\n",
+    "    'media_centrada': flores_centradas.mean(),\n",
+    "    'std_original': flores.std(ddof=0),\n",
+    "    'std_centrada': flores_centradas.std(ddof=0),\n",
+    "}).round(4)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "067249bb",
+   "metadata": {
+    "id": "067249bb",
+    "language": "markdown"
+   },
+   "source": [
+    "## 8. ¿Cuál método elegir?\n",
+    "\n",
+    "| Si la pregunta es… | Considera… | El resultado expresa… |\n",
+    "|---|---|---|\n",
+    "| ¿Dónde está el valor en el rango observado? | Min–max | Fracción del rango, no percentil |\n",
+    "| ¿Qué tan lejos está del promedio? | Z | Desviaciones estándar respecto a la media |\n",
+    "| ¿Qué tan lejos está del centro con menos influencia de extremos? | Robusto | IQR respecto a la mediana |\n",
+    "| ¿Cómo reducir amplitud manteniendo cero y signos? | MaxAbs | Fracción del máximo absoluto |\n",
+    "| ¿Cómo reducir órdenes de magnitud con una regla simple? | Decimal | Valor dividido entre una potencia de diez |\n",
+    "| ¿Cuánto difiere del promedio en su unidad original? | Centrado | Diferencia en la unidad original |\n",
+    "\n",
+    "##### Elección según el algoritmo para un modelo de ML\n",
+    "\n",
+    "No necesitamos estudiar estos algoritmos pero es importante comentar que la preparación de datos también depende del procedimiento que se usará después.\n",
+    "\n",
+    "| Algoritmo o familia | ¿Conviene escalar? | Metodología inicial | ¿Por qué? |\n",
+    "|---|---|---|---|\n",
+    "| K vecinos más cercanos (KNN) | Sí, cuando usa distancias sensibles a la escala | Z, min–max si interesa un rango común | Una variable de gran magnitud puede dominar la distancia. La elección cambia qué diferencias se consideran grandes. |\n",
+    "| K-means y DBSCAN con distancia euclidiana | Generalmente sí | Z, robusto si hay extremos que afectan la referencia | Sus distancias dependen de la escala. En DBSCAN hay que elegir de nuevo el umbral de distancia después de transformar. Robusto no elimina atípicos ni vuelve robusto al algoritmo. |\n",
+    "| Máquinas de soporte vectorial (SVM), especialmente kernel RBF | Generalmente sí | Z, robusto cuando media y desviación son poco representativas | La escala afecta distancias, regularización y parámetros del kernel; estos se deben ajustar junto con el escalamiento. |\n",
+    "| Regresión lineal o logística con regularización (Ridge, Lasso, etc.) | Generalmente sí | Z | La penalización de los coeficientes depende de la escala de las variables. Sin regularización, escalar no garantiza mejores predicciones, aunque puede facilitar la optimización y la comparación de coeficientes. |\n",
+    "| Redes neuronales | Habitualmente sí | Z o min–max, según los datos y la arquitectura | Facilita la optimización numérica. No todas las redes requieren entradas en [0,1], min–max puede llevarse a [-1,1] si tiene sentido para la arquitectura. |\n",
+    "| PCA (reducción de dimensiones) | Depende de qué variación queremos representar | Z para dar una referencia de dispersión común, solo centrado si se desea conservar diferencias de varianza | PCA centra las variables, pero centrar no iguala escalas. Estandarizar cambia los componentes y no debe decidirse automáticamente si la varianza original es significativa. |\n",
+    "| Árbol de decisión, Random Forest y boosting basado en árboles (como XGBoost) | Normalmente no | Conservar las escalas originales | Los árboles convencionales separan mediante umbrales y dependen principalmente del orden de los valores. Z o min–max no suelen aportar una mejora por sí solos, esto no exime de revisar calidad y tipos de datos. |\n",
+    "| Naive Bayes | Depende de la variante | Gaussiano: normalmente no requiere escalar; multinomial: respetar conteos o pesos no negativos, Bernoulli: indicadores binarios | No aplicar z indiscriminadamente: genera negativos que no son válidos para la variante multinomial y no conserva la representación binaria. |\n",
+    "\n",
+    "En scikit-learn, los equivalentes habituales son `StandardScaler`, `MinMaxScaler`, `RobustScaler` y `MaxAbsScaler`. \n",
+    "\n",
+    "**Conclusión:** elegir un método candidato según el algoritmo, el significado de las variables y sus distribuciones."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d8914eb1-f5e8-4480-9c36-4f6bd87a2b32",
+   "metadata": {},
+   "source": [
+    "## Práctica de Laboratorio\n",
+    "\n",
+    "1. **Completar una tabla.** Crea `resultado_practica` con cuatro columnas: `original_cm`, `minmax`, `z` y `robusto`. Aplica las tres fórmulas usando las 150 flores como referencia y `ddof=0`. Muestra solamente las primeras seis filas.\n",
+    "\n",
+    "2. **Interpretar una flor.** Usa la fila con índice 0. Escribe **tres frases**, una por transformación: posición dentro del rango, distancia al promedio y distancia a la mediana. Indica la unidad relativa correcta. No basta decir 'es más grande'.\n",
+    "\n",
+    "3.  **Recibir una observación nueva.** Supón que aparece una nueva medida de **5.0 cm**. Es un dato hipotético, no una flor adicional del dataset. Transfórmalo con los mismos parámetros del paso 1, **sin recalcularlos incluyendo el nuevo dato**. Responde: ¿min–max puede ser mayor que 1? ¿Qué nos dice eso sobre la referencia? ¿Cambiarías o recortarías el dato únicamente por ese resultado?\n",
+    "\n",
+    "4. **Elegir cómo comunicar.** Un compañero quiere informar el tamaño del sépalo; otro quiere indicar qué tan lejos está del promedio. Elige qué columna mostrarías a cada uno y justifica en una oración por qué sus preguntas necesitan representaciones diferentes.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "82cec104",
+   "metadata": {
+    "id": "82cec104",
+    "language": "python"
+   },
+   "outputs": [],
+   "source": [
+    "medida_practica = flores['ancho_sepalo_cm'].copy()\n",
+    "resultado_practica = pd.DataFrame({'original_cm': medida_practica})\n",
+    "nueva_medida_cm = 5.0\n",
+    "\n",
+    "resultado_practica.head(6)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1a046a18-351e-44f8-89ec-a899a3519426",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pd.Series({\n",
+    "    'mínimo de referencia': medida_practica.min(),\n",
+    "    'máximo de referencia': medida_practica.max(),\n",
+    "    'media de referencia': medida_practica.mean(),\n",
+    "    'std de referencia (ddof=0)': medida_practica.std(ddof=0),\n",
+    "    'mediana de referencia': medida_practica.median(),\n",
+    "    'IQR de referencia': medida_practica.quantile(0.75) - medida_practica.quantile(0.25),\n",
+    "}).round(4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6dc4fc9a-394c-4993-b383-7d122928f0ea",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python (IC 2026)",
+   "language": "python",
+   "name": "ic_curso_2026"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+
+======================================================================
+ARCHIVO: .\3.4.- Generación y Enriquecimiento de de Datos.ipynb
+======================================================================
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "0fcf682b",
+   "metadata": {},
+   "source": [
+    "<div style=\"background: linear-gradient(120deg, #1a3a5c 0%, #2d6a9f 60%, #4a9eda 100%); padding: 28px 36px; border-radius: 14px; display: flex; align-items: center; gap: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.18);\">\n",
+    "    <img src='Figures/iteso.jpg' style='height: 110px; border-radius: 8px; background: white; padding: 6px; flex-shrink: 0;'/>\n",
+    "    <div style='border-left: 2px solid rgba(255,255,255,0.4); padding-left: 28px;'>\n",
+    "        <h1 style='margin: 0 0 8px 0; color: white; font-size: 1.5em;'>Ingeniería y Ciencia de Datos</h1>\n",
+    "        <h3 style='margin: 0 0 8px 0; color: white; font-size: 1.5em;'>Laboratorio de Procesamiento de Datos</h3>\n",
+    "        <h3 style='margin: 0; color: rgba(255,255,255,0.8); font-weight: normal; font-size: 1.05em;'>Módulo 2: Generación y transformación de datos</h3>\n",
+    "    </div>\n",
+    "</div>\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6e407492",
+   "metadata": {},
+   "source": [
+    "## Enriquecimiento y creación de variables\n",
+    "\n",
+    "Transformar datos no consiste únicamente en corregir errores o cambiar formatos. \n",
+    "\n",
+    "> También podemos **enriquecerlos**: agregar información útil o crear nuevas variables a partir de los datos disponibles. Por ejemplo, una fecha de nacimiento permite calcular una edad, una cantidad de visitas puede convertirse en una categoría (baja, media o alta), y una medida puede convertirse a otra unidad o escalarse.\n",
+    "\n",
+    "Las variables derivadas pueden facilitar el análisis, apoyar reportes de **Business Intelligence (BI)** y preparar los datos para estudios posteriores o, más adelante, para modelos de inteligencia artificial. \n",
+    "\n",
+    ">Que una variable se pueda calcular no significa automáticamente que sea útil: debe responder a una pregunta y su definición debe poder explicarse.\n",
+    "\n",
+    "**No existe una secuencia universal de generación de nuevos datos que se aplique igual a todos los proyectos.** Sin embargo, podemos usar un **proceso de trabajo** para tomar decisiones ordenadas, revisar los resultados y documentar cómo se crearon las variables. \n",
+    "- Este proceso es iterativo: al validar el resultado podríamos necesitar ajustar la pregunta o la transformación.\n",
+    "\n",
+    "1. **Definir el propósito.** ¿Qué pregunta queremos responder o qué decisión apoyará el análisis? Esto ayuda a elegir qué información realmente aporta valor.\n",
+    "2. **Revisar los datos disponibles.** Identificar columnas, tipos, unidades, valores faltantes, rangos y posibles inconsistencias. Confirmar qué significa cada campo con el contexto del problema.\n",
+    "3. **Elegir una estrategia de enriquecimiento.** Por ejemplo: calcular una variable (edad o importe total), agrupar valores en categorías, convertir unidades, escalar una medida o combinar la tabla con otra fuente confiable.\n",
+    "4. **Aplicar y nombrar las transformaciones.** Crear columnas nuevas con fórmulas claras y nombres descriptivos. Cuando sea útil, conservar las columnas originales para poder comparar y rastrear el cálculo.\n",
+    "5. **Validar el resultado.** Comprobar algunos cálculos manualmente, revisar tipos y rangos, contar valores faltantes y verificar que una unión de tablas no haya duplicado ni eliminado registros inesperadamente.\n",
+    "6. **Documentar y mantener.** Registrar fuente, fórmula, unidades, supuestos, fecha de referencia y limitaciones. Si los datos de origen cambian, definir cómo y cuándo se actualizan las variables.\n",
+    "\n",
+    "```mermaid\n",
+    "flowchart TD\n",
+    "    A[Definir el propósito o pregunta] --> B[Revisar datos y contexto]\n",
+    "    B --> C[Elegir transformación o fuente adicional]\n",
+    "    C --> D[Crear variables, combinar o resumir]\n",
+    "    D --> E[Validar resultados]\n",
+    "    E --> F{¿Son correctos y útiles?}\n",
+    "    F -- Sí --> G[Documentar y utilizar]\n",
+    "    F -- No --> H[Revisar propósito, datos o regla]\n",
+    "    H --> B\n",
+    "```\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6a9dbfae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "carpeta_datos = 'Data'"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a6915761",
+   "metadata": {},
+   "source": [
+    "## 1. Ejemplo Dummy\n",
+    "\n",
+    "Usaremos algunos registros **sintéticos** de clientes y una tabla pequeña de actividad diaria de una cafetería. Sintético significa que los datos son inventados para practicar; no describen clientes ni un negocio reales.\n",
+    "\n",
+    "En proyectos reales, las fechas, ventas y demás datos se obtendrían de los sistemas de la organización. La práctica se concentra en cómo enriquecerlos."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e4543cc6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "clientes = pd.DataFrame({\n",
+    "    'cliente_id': ['C001', 'C002', 'C003', 'C004', 'C005'],\n",
+    "    'fecha_nacimiento': pd.to_datetime([\n",
+    "        '2008-04-12', '1998-11-03', '1985-06-25',\n",
+    "        '1962-02-18', '2001-10-20'\n",
+    "    ])\n",
+    "})\n",
+    "\n",
+    "clientes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8cf258ca",
+   "metadata": {},
+   "source": [
+    "### 1.2. Crear una nueva variable\n",
+    "\n",
+    "Crear la variable edad apartir de la fecha: La edad no siempre viene guardada en una tabla, pero puede calcularse a partir de la fecha de nacimiento. Primero elegimos una **fecha de referencia**. Para este ejemplo será el 22 de octubre de 2026, usar una fecha fija hace que el ejercicio noa de el mismo resultado cuando se vuelva a ejecutar.\n",
+    "\n",
+    "No basta con restar los años: si la persona todavía no ha cumplido años en la fecha de referencia, debemos restar uno. La comparación del mes y día permite considerar ese detalle. \n",
+    "\n",
+    "- En pandas, `.dt.year`, `.dt.month` y `.dt.day` extraen esas partes de una columna de fechas. \n",
+    "\n",
+    "La edad calculada será una **variable derivada**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4190ce8f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fecha_corte = pd.Timestamp('2026-10-20')\n",
+    "cumple_anos_pendiente = (\n",
+    "    (clientes['fecha_nacimiento'].dt.month > fecha_corte.month)\n",
+    "    | ((clientes['fecha_nacimiento'].dt.month == fecha_corte.month)& (clientes['fecha_nacimiento'].dt.day > fecha_corte.day))\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "79f9e0ce-36d6-471b-a2c4-7bb086ecc78f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cumple_anos_pendiente"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2414a7e1-f6ca-417d-a80a-28f8dec1d075",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "clientes['edad'] = (\n",
+    "    fecha_corte.year\n",
+    "    - clientes['fecha_nacimiento'].dt.year\n",
+    "    - cumple_anos_pendiente.astype(int)\n",
+    ")\n",
+    "\n",
+    "clientes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b666a488",
+   "metadata": {},
+   "source": [
+    "### 1.3. Agrupar valores en categorías\n",
+    "\n",
+    "A veces es más fácil resumir o comunicar una cantidad mediante grupos. `pd.cut` divide una columna numérica en intervalos. En este ejemplo agruparemos las edades, los límites son decisiones que deben elegirse según el contexto, no reglas universales. Por defecto, cada intervalo incluye su límite derecho, `include_lowest=True` también incluye el valor más bajo del primer intervalo."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d8100d98",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "limites_edad = [0, 17, 30, 60, 120]\n",
+    "etiquetas_edad = ['0-17', '18-30', '31-60', '61 o más']\n",
+    "\n",
+    "clientes['grupo_edad'] = pd.cut(\n",
+    "    clientes['edad'],\n",
+    "    bins=limites_edad,\n",
+    "    labels=etiquetas_edad,\n",
+    "    include_lowest=True\n",
+    ")\n",
+    "\n",
+    "display(clientes)\n",
+    "print('Cantidad de clientes en cada grupo:')\n",
+    "display(clientes['grupo_edad'].value_counts(sort=False))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "caso-real-palmer-intro",
+   "metadata": {},
+   "source": [
+    "## 2. Dataset: pingüinos de Palmer\n",
+    "\n",
+    "Ahora aplicaremos las mismas ideas a un conjunto de datos publicado en la web. **Palmer Penguins** contiene mediciones de pingüinos observados en tres islas del archipiélago Palmer, en la Antártida. El conjunto tiene **344** registros e incluye especie, isla, longitud y profundidad del pico, longitud de la aleta, masa corporal, sexo y año.\n",
+    "\n",
+    "Fuentes: [repositorio Palmer Penguins](https://github.com/allisonhorst/palmerpenguins), [archivo CSV utilizado](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv).\n",
+    "\n",
+    "Primero revisaremos las columnas y los valores faltantes. \n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "carga-palmer-penguins",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pinguinos = pd.read_csv(os.path.join(carpeta_datos, 'penguins.csv'))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cd4b7d80-7c1a-478e-8e27-370d99e12b25",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "500da525-a791-445b-b45e-e369f8e303e3",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "82095225-4d3d-40f4-b370-97b0add1351b",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "enriquecimiento-palmer-explicacion",
+   "metadata": {},
+   "source": [
+    "**Vamos a crear columnas que podrían facilitar la lectura y el resumen de los datos:**\n",
+    "\n",
+    "- `body_mass_kg`: convierte la masa de gramos a kilogramos (`gramos / 1000`).\n",
+    "- `flipper_length_cm`: convierte la longitud de la aleta de milímetros a centímetros (`milímetros / 10`).\n",
+    "- `bill_length_depth_ratio`: divide la longitud del pico entre su profundidad. Es un **índice calculado**.\n",
+    "- `bill_length_group`: agruparemos la longitud del pico en intervalos ilustrativos. \n",
+    "- `body_mass_zscore`: expresa la masa en relación con el promedio de esta muestra. Un valor positivo está por encima del promedio y uno negativo, por debajo."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "crear-variables-palmer",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pinguinos_enriquecidos = pinguinos.copy()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d1445c8b-062d-4802-a810-b1e53f135b53",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Nuevas columnas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7c33a06a-3ed6-4a70-9a4e-a82984c968d2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#pd.cut"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "51ae451f-fb5e-4edd-ae60-670b5ce52824",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Columnas estadisticas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e3133927-e26f-411f-9cb8-74554656b114",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Valores faltantes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "resumen-palmer-explicacion",
+   "metadata": {},
+   "source": [
+    "Además de crear columnas para cada pingüino, podemos **generar una nueva tabla** que resuma la información por especie e isla. `groupby` reúne las filas de cada combinación y `agg` calcula medidas para cada grupo. Esta tabla podría servir como punto de partida para un reporte de BI."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "crear-resumen-palmer",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Reporte con algunas métricas\n",
+    "resumen_pinguinos = None\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "48d6a034-7c25-43e8-a3b0-ef8688d212af",
+   "metadata": {},
+   "source": [
+    "Generar algunas gráficas"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "caso-bike-sharing-intro",
+   "metadata": {},
+   "source": [
+    "## 3. Enriquecer datos de alquiler de bicicletas\n",
+    "\n",
+    "En este ejemplo trabajaremos con el conjunto **Bike Sharing Dataset** (`hour.csv`) extraído del repositorio [archivo original de UCI](https://archive.ics.uci.edu/static/public/275/bike+sharing+dataset.zip). La descripción original de las columnas está en `Data/bike_sharing_Readme.txt`. Este dataset contiene registros reales por hora del sistema **Capital Bikeshare** en Washington, D. C., durante 2011 y 2012, junto con información de calendario y clima. Cada fila representa una hora e incluye, entre otras columnas, fecha, estación, clima, temperatura normalizada, humedad, velocidad del viento y cantidad de bicicletas rentadas.\n",
+    "\n",
+    "**¿Cómo podemos preparar estos registros para explorar la demanda por hora, periodo del día, tipo de día, estación del año y condiciones meteorológicas?**\n",
+    "\n",
+    "- Para esto vamos a crear variables más interpretables que aporten valor para un análisis más comprensible."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "descargar-bike-sharing",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bicicletas_original = pd.read_csv(os.path.join(carpeta_datos, 'hour.csv'))\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bike-diccionario",
+   "metadata": {},
+   "source": [
+    "Algunas columnas están codificadas como números, pero representan categorías. Según la [descripción de UCI](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset):\n",
+    "\n",
+    "- `season`: 1 invierno, 2 primavera, 3 verano, 4 otoño.\n",
+    "- `weathersit`: 1 despejado o parcialmente nublado, 2 neblina o nubes, 3 nieve o lluvia ligera, 4 condiciones severas.\n",
+    "- `temp` está normalizada entre 0 y 1 a partir de una temperatura en °C entre -8 y 39. `atemp` usa una escala distinta, entre -16 y 50 °C.\n",
+    "- `hum` es humedad dividida entre 100.\n",
+    "- `casual` y `registered` son conteos de usuarios, `cnt` es el total de alquileres.\n",
+    "\n",
+    "No debemos tratar el código `season=1` como una medida numérica: el número identifica una categoría. Usaremos etiquetas para que las tablas sean más legibles."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "bike-inspeccion-calidad",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "columnas_conteos = ['casual', 'registered', 'cnt']\n",
+    "diferencia_conteos = (\n",
+    "    bicicletas_original['casual']\n",
+    "    + bicicletas_original['registered']\n",
+    "    - bicicletas_original['cnt']\n",
+    ")\n",
+    "\n",
+    "print('Filas duplicadas por fecha y hora:', bicicletas_original.duplicated(['dteday', 'hr']).sum())\n",
+    "print('Filas donde casual + registered no coincide con cnt:', (diferencia_conteos != 0).sum())\n",
+    "print('\\nRangos de algunas columnas:')\n",
+    "bicicletas_original[columnas_conteos + ['temp', 'atemp', 'hum', 'windspeed']].describe().round(2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bike-crear-variables",
+   "metadata": {},
+   "source": [
+    "A partir de la fecha y la hora construiremos el momento completo (`fecha_hora`), el nombre del día, si corresponde a fin de semana y un periodo del día. También convertiremos las escalas normalizadas a sus unidades descritas por UCI y traduciremos los códigos de estación y clima.\n",
+    "\n",
+    "Crearemos `periodo_dia`donde: madrugada (00–05), mañana (06–11), tarde (12–17) y noche (18–23). No son una clasificación universal es una elección que hacemos. La columna original se conserva y las variables derivadas se agregan a una copia."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "bike-enriquecer-fila",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "bicicletas = bicicletas_original.copy()\n",
+    "bicicletas['fecha'] = pd.to_datetime(bicicletas['dteday'])\n",
+    "bicicletas['fecha_hora'] = bicicletas['fecha'] + pd.to_timedelta(bicicletas['hr'], unit='h')\n",
+    "bicicletas['nombre_dia'] = bicicletas['fecha'].dt.day_name()\n",
+    "bicicletas['es_fin_de_semana'] = bicicletas['fecha'].dt.dayofweek.isin([5, 6])\n",
+    "\n",
+    "bicicletas['periodo_dia'] = pd.cut(\n",
+    "    bicicletas['hr'],\n",
+    "    bins=[0, 6, 12, 18, 24],\n",
+    "    labels=['Madrugada', 'Mañana', 'Tarde', 'Noche'],\n",
+    "    right=False,\n",
+    "    include_lowest=True\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "421caea5-e509-407d-973a-3a9822a10fa5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "etiquetas_estacion = {\n",
+    "    1: 'Invierno', 2: 'Primavera', 3: 'Verano', 4: 'Otoño'\n",
+    "}\n",
+    "etiquetas_clima = {\n",
+    "    1: 'Despejado o parcialmente nublado',\n",
+    "    2: 'Neblina o nublado',\n",
+    "    3: 'Nieve o lluvia ligera',\n",
+    "    4: 'Condiciones severas'\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a9caccf9-31bb-4d15-8b59-a37841d69827",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bicicletas['estacion_nombre'] = bicicletas['season'].map(etiquetas_estacion)\n",
+    "bicicletas['clima_nombre'] = bicicletas['weathersit'].map(etiquetas_clima)\n",
+    "\n",
+    "#Conversion a grados c\n",
+    "bicicletas['temperatura_c'] = bicicletas['temp'] * (39 - (-8)) + (-8)\n",
+    "bicicletas['sensacion_termica_c'] = bicicletas['atemp'] * (50 - (-16)) + (-16)\n",
+    "\n",
+    "bicicletas['humedad_pct'] = bicicletas['hum'] * 100\n",
+    "\n",
+    "bicicletas['proporcion_usuarios_registrados'] = (\n",
+    "    bicicletas['registered'] / bicicletas['cnt'].where(bicicletas['cnt'] != 0)\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e370428f-cdb7-4bb6-862b-1ebb5a0b477b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "columnas_nuevas = [\n",
+    "    'fecha_hora', 'nombre_dia', 'es_fin_de_semana', 'periodo_dia',\n",
+    "    'estacion_nombre', 'clima_nombre', 'temperatura_c',\n",
+    "    'sensacion_termica_c', 'humedad_pct', 'proporcion_usuarios_registrados'\n",
+    "]\n",
+    "bicicletas[['dteday', 'hr', 'season', 'weathersit', 'cnt'] + columnas_nuevas].head(12).round(2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bike-tablas-resumen",
+   "metadata": {},
+   "source": [
+    "**Una variable derivada puede enriquecer cada fila** una **tabla agregada** resume varias filas. Aquí generaremos dos productos sencillos: la demanda promedio por hora y una tabla diaria. \n",
+    "\n",
+    "- `mean` contesta cuánto se renta en una hora típica de ese grupo\n",
+    "- `sum` permite calcular el total observado en el día. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "bike-resumenes",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "demanda_por_hora = (\n",
+    "    bicicletas\n",
+    "    .groupby('hr', as_index=False, observed=True)\n",
+    "    .agg(\n",
+    "        alquileres_promedio=('cnt', 'mean'),\n",
+    "        casuales_promedio=('casual', 'mean'),\n",
+    "        registrados_promedio=('registered', 'mean')\n",
+    "    )\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c5ef72ef-da97-4c7f-adcf-53ff74345558",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "demanda_por_periodo = (\n",
+    "    bicicletas\n",
+    "    .groupby(['es_fin_de_semana', 'periodo_dia'], as_index=False, observed=True)\n",
+    "    .agg(\n",
+    "        horas_observadas=('cnt', 'size'),\n",
+    "        alquileres_promedio=('cnt', 'mean'),\n",
+    "        humedad_promedio_pct=('humedad_pct', 'mean')\n",
+    "    )\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c7f0eac2-e36c-4ab7-9a3d-2cb44ea7bc39",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "resumen_diario = (\n",
+    "    bicicletas\n",
+    "    .groupby('fecha', as_index=False)\n",
+    "    .agg(\n",
+    "        alquileres_total=('cnt', 'sum'),\n",
+    "        usuarios_casuales_total=('casual', 'sum'),\n",
+    "        usuarios_registrados_total=('registered', 'sum'),\n",
+    "        horas_con_registro=('hr', 'nunique'),\n",
+    "        temperatura_promedio_c=('temperatura_c', 'mean')\n",
+    "    )\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a18e035a-20ab-45cd-9c04-b90ac25c9730",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print('Promedio de alquileres por hora del día:')\n",
+    "display(demanda_por_hora.round(1))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "706c327c-0aae-48a6-97e2-6dc4d7132dea",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print('Comparación por fin de semana y periodo:')\n",
+    "display(demanda_por_periodo.round(1))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8f99bfd8-728b-4bd7-ac48-9fdd62433bcc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print('Primeros registros del resumen diario:')\n",
+    "display(resumen_diario.head().round(1))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bike-interpretacion",
+   "metadata": {},
+   "source": [
+    "Las tablas permiten explorar cuándo se registraron más alquileres y comparar periodos o días. Son **descripciones de estos datos históricos**. Una diferencia entre días laborables y fines de semana no demuestra por sí sola que el tipo de día sea la causa: también pueden influir clima, eventos, disponibilidad de bicicletas y otros factores.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "bike-grafica-horaria",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(10, 4))\n",
+    "plt.plot(demanda_por_hora['hr'], demanda_por_hora['alquileres_promedio'], marker='o')\n",
+    "plt.title('Alquileres promedio por hora (2011–2012)')\n",
+    "plt.xlabel('Hora del día')\n",
+    "plt.ylabel('Alquileres promedio por registro horario')\n",
+    "plt.xticks(range(0, 24, 2))\n",
+    "plt.grid(alpha=0.3)\n",
+    "plt.show()\n",
+    "\n",
+    "print('Resumen diario, en días con más alquileres:')\n",
+    "display(resumen_diario.nlargest(5, 'alquileres_total').round(1))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "caso-enriquecimiento-geografico",
+   "metadata": {},
+   "source": [
+    "## 4. Enriquecer registros con contexto geográfico y demográfico\n",
+    "\n",
+    "Leeremos las tres respuestas JSON del Banco Mundial guardadas en `Data`. Conservamos las respuestas originales para mantener los metadatos de las fuentes.\n",
+    "\n",
+    "Un negocio puede tener registros de actividad asociados a un país o región y querer agregar contexto para un reporte. En lugar de usar direcciones de personas, aquí trabajaremos con **códigos ISO de país** y datos públicos agregados del Banco Mundial. \n",
+    "\n",
+    "- Haremos una unión mediante una clave geográfica común, igual que se podría relacionar un registro con una tabla de ciudades, estados o códigos postales cuando el nivel y el uso sean apropiados.\n",
+    "\n",
+    "- Usaremos indicadores del año **2023**: población total (`SP.POP.TOTL`), PIB per cápita en dólares corrientes (`NY.GDP.PCAP.CD`) y región/nivel de ingreso del catálogo de países. Estos valores describen países o economías.\n",
+    "\n",
+    "La tabla de compras y sus importes son datos dummys creados para este ejercicio. La fuente real que agregamos es la información geográfica y económica del Banco Mundial. \n",
+    "\n",
+    "Fuentes: [API de países del Banco Mundial](https://api.worldbank.org/v2/country?format=json&per_page=300), [indicador de población](https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?date=2023&format=json&per_page=300) e [indicador de PIB per cápita](https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD?date=2023&format=json&per_page=300)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cargar-world-bank",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import json\n",
+    "\n",
+    "def leer_datos_banco_mundial(archivo):\n",
+    "    with open(archivo, encoding='utf-8') as entrada:\n",
+    "        contenido = json.load(entrada)\n",
+    "    if len(contenido) < 2 or contenido[1] is None:\n",
+    "        raise ValueError(f'El archivo no contiene datos del Banco Mundial: {archivo}')\n",
+    "    return contenido[1]\n",
+    "\n",
+    "paises_api = leer_datos_banco_mundial(\n",
+    "    os.path.join(carpeta_datos, 'banco_mundial_paises.json')\n",
+    ")\n",
+    "poblacion_api = leer_datos_banco_mundial(\n",
+    "    os.path.join(carpeta_datos, 'banco_mundial_poblacion_2023.json')\n",
+    ")\n",
+    "pib_api = leer_datos_banco_mundial(\n",
+    "    os.path.join(carpeta_datos, 'banco_mundial_pib_per_capita_2023.json')\n",
+    ")\n",
+    "\n",
+    "print('Registros de países recibidos:', len(paises_api))\n",
+    "print('Observaciones de población recibidas:', len(poblacion_api))\n",
+    "print('Observaciones de PIB per cápita recibidas:', len(pib_api))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "explicar-tablas-world-bank",
+   "metadata": {},
+   "source": [
+    "### Preparar las tablas y unirlas por el código del país\n",
+    "\n",
+    "Los archivos locales conservan las respuestas originales de la API en formato JSON, incluidos sus metadatos. Convertiremos cada respuesta a una tabla de pandas y dejaremos solo columnas necesarias. \n",
+    "\n",
+    "- El código de tres letras (por ejemplo, `MEX`) será nuestra **clave de unión**. Excluimos los agregados regionales del Banco Mundial porque el ejemplo asigna contexto a países individuales."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "unir-datos-world-bank",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "tabla_paises = pd.DataFrame([\n",
+    "    {\n",
+    "        'pais_iso3': pais['id'],\n",
+    "        'pais': pais['name'],\n",
+    "        'region': pais['region']['value'].strip(),\n",
+    "        'nivel_ingreso_pais': pais['incomeLevel']['value'].strip(),\n",
+    "        'codigo_nivel_ingreso': pais['incomeLevel']['id']\n",
+    "    }\n",
+    "    for pais in paises_api\n",
+    "    if pais['incomeLevel']['id'] in {'LIC', 'LMC', 'UMC', 'HIC'}\n",
+    "])\n",
+    "\n",
+    "codigos_pais = set(tabla_paises['pais_iso3'])\n",
+    "\n",
+    "tabla_poblacion = pd.DataFrame([\n",
+    "    {'pais_iso3': dato['countryiso3code'], 'poblacion_2023': dato['value']}\n",
+    "    for dato in poblacion_api\n",
+    "    if dato['value'] is not None and dato['countryiso3code'] in codigos_pais\n",
+    "])\n",
+    "\n",
+    "tabla_pib = pd.DataFrame([\n",
+    "    {'pais_iso3': dato['countryiso3code'], 'pib_per_capita_usd_2023': dato['value']}\n",
+    "    for dato in pib_api\n",
+    "    if dato['value'] is not None and dato['countryiso3code'] in codigos_pais\n",
+    "])\n",
+    "\n",
+    "contexto_paises = (\n",
+    "    tabla_paises\n",
+    "    .merge(tabla_poblacion, on='pais_iso3', how='left', validate='one_to_one')\n",
+    "    .merge(tabla_pib, on='pais_iso3', how='left', validate='one_to_one')\n",
+    ")\n",
+    "\n",
+    "display(contexto_paises[contexto_paises['pais_iso3'].isin(['MEX', 'USA', 'COL', 'BRA'])].round(2))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "aplicar-enriquecimiento-geografico",
+   "metadata": {},
+   "source": [
+    "### Agregar contexto a una tabla de actividad\n",
+    "\n",
+    "Ahora relacionamos cada registro con la tabla geográfica mediante `pais_iso3`. En un proyecto real, esa clave podría provenir de un país seleccionado por el usuario o de una dirección validada y convertida a una región con permisos adecuados. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "crear-registros-enriquecidos",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "compras_demo = pd.DataFrame({\n",
+    "    'registro_id': ['R001', 'R002', 'R003', 'R004', 'R005', 'R006'],\n",
+    "    'pais_iso3': ['MEX', 'USA', 'COL', 'BRA', 'MEX', 'USA'],\n",
+    "    'importe_compra_usd': [35.50, 82.00, 24.75, 51.20, 63.00, 45.00]\n",
+    "})\n",
+    "\n",
+    "compras_enriquecidas = compras_demo.merge(\n",
+    "    contexto_paises,\n",
+    "    on='pais_iso3',\n",
+    "    how='left',\n",
+    "    validate='many_to_one',\n",
+    "    indicator=True\n",
+    ")\n",
+    "\n",
+    "print('Registros antes de la unión:', len(compras_demo))\n",
+    "print('Registros después de la unión:', len(compras_enriquecidas))\n",
+    "print('Resultado de la unión:')\n",
+    "display(compras_enriquecidas[[\n",
+    "    'registro_id', 'pais_iso3', 'pais', 'region', 'nivel_ingreso_pais',\n",
+    "    'poblacion_2023', 'pib_per_capita_usd_2023', 'importe_compra_usd', '_merge'\n",
+    "]].round(2))\n",
+    "\n",
+    "print('¿Algún código no encontró país?', (compras_enriquecidas['_merge'] != 'both').any())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e9313925-2245-402b-8f91-f2918cd392a6",
+   "metadata": {},
+   "source": [
+    "\n",
+    "**Idea clave:** enriquecer datos es crear variables útiles con reglas comprensibles, justificadas y documentadas."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "actividad-generacion-datos",
+   "metadata": {},
+   "source": [
+    "## Práctica de Laboratorio\n",
+    "Para el dataset **Palmer Penguins**\n",
+    "1. Propón otra variable derivada que pudiera ayudar en un reporte y escribe en una frase cómo se calcularía y qué limitación tendría.\n",
+    "\n",
+    "Usando el datset **Bike Sharing**, realizar lo siguiente:\n",
+    "1. Cambia los intervalos de `periodo_dia` y explica cómo cambia la tabla `demanda_por_periodo`.\n",
+    "2. Compara la cantidad promedio de usuarios casuales y registrados en `demanda_por_hora`. ¿En qué horas difieren más?\n",
+    "3. Crea una tabla que resuma los alquileres promedio por `estacion_nombre` y `clima_nombre`. Recuerda incluir el número de observaciones de cada grupo.\n",
+    "5. Propón una variable derivada adicional para planear la operación de bicicletas. Describe su fórmula, unidades y una limitación.\n",
+    "\n",
+    "Usando las tres respuestas **JSON del Banco Mundial** y el datset **compras_demo**, realizar lo siguiente:\n",
+    "\n",
+    "1. Cambia uno de los códigos `pais_iso3` de `compras_demo` por otro país que aparezca en `contexto_paises`. ¿Qué columnas se agregan?\n",
+    "2. Prueba un código que no exista y observa `_merge`. ¿Por qué es útil verificar si todas las filas encontraron correspondencia?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "94f2b150-1fd9-494b-84a4-39b08141e58c",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+
+======================================================================
+ARCHIVO: .\Actividad6_Tratammiento_Datos_Faltantes(Multivariado).ipynb
+======================================================================
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "b1396f2f",
+   "metadata": {},
+   "source": [
+    "\n",
+    "\n",
+    "<div style=\"background: linear-gradient(120deg, #1ca9c9 0%, #40c4d6 60%, #7fe0e0 100%); padding: 28px 36px; border-radius: 14px; display: flex; align-items: center; gap: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.18);\">\n",
+    "    <img src='Figures/iteso.jpg' style=\"height: 110px; border-radius: 8px; background: white; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);\"/>\n",
+    "    <div style=\"border-left: 2px solid rgba(255,255,255,0.4); padding-left: 28px;\">\n",
+    "        <h1 style=\"margin: 0 0 8px 0; color: white; font-size: 1.5em; line-height: 1.3;\">Actividad 6:  Datos Faltantes (Imputación Multivariada)</h1>\n",
+    "        <h3 style=\"margin: 0; color: rgba(255,255,255,0.8); font-weight: normal; font-size: 1.05em;\">Laboratorio de Procesamiento de Datos</h3>\n",
+    "    </div>\n",
+    "</div>\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "135a9969",
+   "metadata": {},
+   "source": [
+    "Esta actividad consiste en aplicar y comparar dos **métodos de imputación multivariada** en un conjunto de datos numérico. Además de describir cómo funcionan, evaluarás qué tan bien recuperan valores que se ocultaron deliberadamente.\n",
+    "\n",
+    "Se utilizará el conjunto **Diabetes** incluido en `scikit-learn` (`load_diabetes`). Contiene **442 observaciones** y **10 carácterísticas numéricas**, sus valores están escalados y las variables presentan relaciones entre sí. No se requiere descargar un archivo. La variable objetivo no se incluye en la imputación.\n",
+    "\n",
+    "La primera celda carga las variables completas (`X_completo`), crea una máscara aleatoria reproducible y oculta cerca del 15 % de sus celdas (`X_incompleto`). Conserva `X_completo` y `mascara`: servirán para comparar las imputaciones con los valores reales que se ocultaron. En este ejercicio suponemos que los datos faltantes son **MCAR** (se generan al azar).\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "329ec2d4-ec67-4183-a152-adfb68f9cfb3",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Observaciones: 442\n",
+      "Variables predictoras: 10\n",
+      "Valores ocultos: 674 (15.2%)\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>age</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>bmi</th>\n",
+       "      <th>bp</th>\n",
+       "      <th>s1</th>\n",
+       "      <th>s2</th>\n",
+       "      <th>s3</th>\n",
+       "      <th>s4</th>\n",
+       "      <th>s5</th>\n",
+       "      <th>s6</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0.038076</td>\n",
+       "      <td>0.050680</td>\n",
+       "      <td>0.061696</td>\n",
+       "      <td>0.021872</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>-0.034821</td>\n",
+       "      <td>-0.043401</td>\n",
+       "      <td>-0.002592</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>-0.017646</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>-0.001882</td>\n",
+       "      <td>-0.044642</td>\n",
+       "      <td>-0.051474</td>\n",
+       "      <td>-0.026328</td>\n",
+       "      <td>-0.008449</td>\n",
+       "      <td>-0.019163</td>\n",
+       "      <td>0.074412</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>-0.068332</td>\n",
+       "      <td>-0.092204</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>0.085299</td>\n",
+       "      <td>0.050680</td>\n",
+       "      <td>0.044451</td>\n",
+       "      <td>-0.005670</td>\n",
+       "      <td>-0.045599</td>\n",
+       "      <td>-0.034194</td>\n",
+       "      <td>-0.032356</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>0.002861</td>\n",
+       "      <td>-0.025930</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>-0.089063</td>\n",
+       "      <td>-0.044642</td>\n",
+       "      <td>-0.011595</td>\n",
+       "      <td>-0.036656</td>\n",
+       "      <td>0.012191</td>\n",
+       "      <td>0.024991</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>0.034309</td>\n",
+       "      <td>0.022688</td>\n",
+       "      <td>-0.009362</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>0.005383</td>\n",
+       "      <td>-0.044642</td>\n",
+       "      <td>-0.036385</td>\n",
+       "      <td>0.021872</td>\n",
+       "      <td>0.003935</td>\n",
+       "      <td>0.015596</td>\n",
+       "      <td>0.008142</td>\n",
+       "      <td>-0.002592</td>\n",
+       "      <td>-0.031988</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        age       sex       bmi        bp        s1        s2        s3  \\\n",
+       "0  0.038076  0.050680  0.061696  0.021872       NaN -0.034821 -0.043401   \n",
+       "1 -0.001882 -0.044642 -0.051474 -0.026328 -0.008449 -0.019163  0.074412   \n",
+       "2  0.085299  0.050680  0.044451 -0.005670 -0.045599 -0.034194 -0.032356   \n",
+       "3 -0.089063 -0.044642 -0.011595 -0.036656  0.012191  0.024991       NaN   \n",
+       "4  0.005383 -0.044642 -0.036385  0.021872  0.003935  0.015596  0.008142   \n",
+       "\n",
+       "         s4        s5        s6  \n",
+       "0 -0.002592       NaN -0.017646  \n",
+       "1       NaN -0.068332 -0.092204  \n",
+       "2       NaN  0.002861 -0.025930  \n",
+       "3  0.034309  0.022688 -0.009362  \n",
+       "4 -0.002592 -0.031988       NaN  "
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from sklearn.datasets import load_diabetes\n",
+    "import numpy as np\n",
+    "\n",
+    "# Dataset completo para conservar los valores reales como referencia.\n",
+    "diabetes = load_diabetes(as_frame=True)\n",
+    "X_completo = diabetes.data\n",
+    "\n",
+    "# Ocultamos aleatoriamente el 15 % de las celdas; la semilla hace reproducible el ejercicio.\n",
+    "rng = np.random.default_rng(42)\n",
+    "mascara = rng.random(X_completo.shape) < 0.15\n",
+    "X_incompleto = X_completo.mask(mascara)\n",
+    "\n",
+    "print(f\"Observaciones: {X_completo.shape[0]}\")\n",
+    "print(f\"Variables predictoras: {X_completo.shape[1]}\")\n",
+    "print(f\"Valores ocultos: {mascara.sum()} ({mascara.mean():.1%})\")\n",
+    "X_incompleto.head()\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "15b73e40-548a-464a-b565-4407e92fe4d6",
+   "metadata": {},
+   "source": [
+    "1. **KNNImputer.** Investiga y explica cómo `sklearn.impute.KNNImputer` estima un valor usando filas vecinas y la distancia euclidiana ajustada a las variables observadas en común. Aplica el método al dataset `X_incompleto`, prueba al menos dos valores de `n_neighbors` (argumento de entrada de KNNImputer) y explica cómo elegiste el mejor.\n",
+    "\n",
+    "Imputa cada valor faltante en una fila tomando la media (ponderada o uniforme) de los valores correspondientes en sus $k$ vecinos más cercanos (k-Nearest Neighbors), pero para su calculo schikit learn aplica una ecuacion donde toma el numero de variables tota, el conjunto de variables donde ambas observaciones tienen valores (ninguna es NaN)\n",
+    "Una vez calculadas las distancias y seleccionados los k vecinos mas cercanos , el valor ausente de la variable se imputa calculando la media de los mas cercanos.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "f519319b-336d-44c5-b4e8-adc731bb00e9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "EVALUACIÓN DE KNNImputer SEGÚN n_neighbors\n",
+      " n_neighbors (k)    RMSE     MAE\n",
+      "               2 0.04211 0.03199\n",
+      "               3 0.03954 0.02999\n",
+      "               5 0.03706 0.02856\n",
+      "              10 0.03501 0.02718\n",
+      "              15 0.03466 0.02717\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Código aquí\n",
+    "from sklearn.impute import KNNImputer\n",
+    "from sklearn.metrics import mean_squared_error, mean_absolute_error\n",
+    "import pandas as pd\n",
+    "\n",
+    "# Valores reales que fueron ocultados\n",
+    "valores_reales = X_completo.values[mascara]\n",
+    "\n",
+    "# Probamos distintos valores de n_neighbors (incluyendo al menos dos, p. ej. 3, 5, 10 y 15)\n",
+    "vecinos_a_probar = [2, 3, 5, 10, 15]\n",
+    "resultados_knn = []\n",
+    "\n",
+    "for k in vecinos_a_probar:\n",
+    "    imputer_knn = KNNImputer(n_neighbors=k)\n",
+    "    X_knn_arr = imputer_knn.fit_transform(X_incompleto)\n",
+    "    \n",
+    "    # Extraer únicamente los valores que se habían ocultado\n",
+    "    valores_imputados_knn = X_knn_arr[mascara]\n",
+    "    \n",
+    "    # Evaluar la calidad de recuperación frente a los valores reales\n",
+    "    rmse = np.sqrt(mean_squared_error(valores_reales, valores_imputados_knn))\n",
+    "    mae = mean_absolute_error(valores_reales, valores_imputados_knn)\n",
+    "    \n",
+    "    resultados_knn.append({\n",
+    "        \"n_neighbors (k)\": k,\n",
+    "        \"RMSE\": round(rmse, 5),\n",
+    "        \"MAE\": round(mae, 5)\n",
+    "    })\n",
+    "\n",
+    "df_eval_knn = pd.DataFrame(resultados_knn)\n",
+    "print(\"EVALUACIÓN DE KNNImputer SEGÚN n_neighbors\")\n",
+    "print(df_eval_knn.to_string(index=False))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5f4b2a64-d6f3-4c7e-bbb0-e34f59ac5c01",
+   "metadata": {},
+   "source": [
+    "2. ### **IterativeImputer.** Investiga y explica cómo `sklearn.impute.IterativeImputer` estima cada variable incompleta a partir de las demás y repite el proceso por rondas. Aplica el método a `X_incompleto`.\n",
+    "\n",
+    "### Como funciona sklearn.impute.iterativeimputer?\n",
+    "\n",
+    "*IterativeImputer* se basa en la estrategia MICE (Multivariate Imputation by Chained Equations o Imputación Multivariada por Ecuaciones Encadenadas). Trata la imputación como una secuencia iterativa de problemas de regresión\n",
+    "\n",
+    "* Imputación inicial previa: >    Todas las celdas faltantes se rellenan temporalmente con una estadística univariada simple (por defecto, la media de cada columna).\n",
+    "\n",
+    "* Modelado columna por columna (en cadena): >    Para cada variable $j$ que contenga valores faltantes:\n",
+    "\n",
+    "    * Se designa a la variable $j$ como la variable dependiente u objetivo ($y$).\n",
+    "\n",
+    "    * Las restantes variables $X_{-j}$ actúan como características predictoras.\n",
+    "\n",
+    "    * Se entrena un modelo de regresión (por defecto BayesianRidge) utilizando únicamente las filas donde la variable $j$ fue originalmente observada.\n",
+    "\n",
+    "    * Se predicen y reemplazan los valores faltantes de $j$ empleando las predicciones del modelo sobre las demás variables.\n",
+    "\n",
+    "* Rondas o iteraciones: >    Una pasada completa que actualiza todas las columnas incompletas constituye una ronda o ciclo.\n",
+    "\n",
+    "* Convergencia: >    El proceso se repite sucesivamente por varias rondas (determinado por el parámetro max_iter, típicamente 10). En cada nueva ronda, las predicciones mejoran porque las variables predictoras ahora contienen imputaciones más refinadas de la ronda anterior, concluyendo cuando los cambios entre rondas caen por debajo de un umbral de tolerancia (tol) o se alcanza el número máximo de iteraciones.\n",
+    "\n",
+    "MAE > Mean Absolut Error - Error absoluto medio\n",
+    "\n",
+    "RMSE > Root Mean Squared Error - Raíz del error cuadratico medio"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "501a8787-87dd-44fc-873b-7f16f4e42b23",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "EVALUACIÓN DE IterativeImputer\n",
+      "RMSE: 0.02953\n",
+      "MAE:  0.02213\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "c:\\Users\\santi\\OneDrive - ITESO\\ITESO\\Semestre 3\\Procesamiento de Datos\\Laboratorio_de_Procesamiento_de_Datos_02026\\.venv\\Lib\\site-packages\\sklearn\\impute\\_iterative.py:867: ConvergenceWarning: [IterativeImputer] Early stopping criterion not reached.\n",
+      "  warnings.warn(\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Código aquí\n",
+    "# IterativeImputer es una característica experimental en scikit-learn, requiere habilitarse primero\n",
+    "from sklearn.experimental import enable_iterative_imputer\n",
+    "from sklearn.impute import IterativeImputer\n",
+    "\n",
+    "# Instanciar y ajustar el modelo\n",
+    "imputer_iter = IterativeImputer(max_iter=15, random_state=42)\n",
+    "X_iter_arr = imputer_iter.fit_transform(X_incompleto)\n",
+    "\n",
+    "# Extraer los valores imputados en las posiciones ocultas\n",
+    "valores_imputados_iter = X_iter_arr[mascara]\n",
+    "\n",
+    "# Métricas de error frente a los datos reales\n",
+    "rmse_iter = np.sqrt(mean_squared_error(valores_reales, valores_imputados_iter))\n",
+    "mae_iter = mean_absolute_error(valores_reales, valores_imputados_iter)\n",
+    "\n",
+    "print(\"EVALUACIÓN DE IterativeImputer\")\n",
+    "print(f\"RMSE: {rmse_iter:.5f}\")\n",
+    "print(f\"MAE:  {mae_iter:.5f}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "5c6a8140",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "COMPARACIÓN FINAL DE RENDIMIENTO\n",
+      "           Método    RMSE     MAE\n",
+      " KNNImputer (k=3) 0.03954 0.02999\n",
+      "KNNImputer k = 15 0.03466 0.02717\n",
+      " IterativeImputer 0.02953 0.02213\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Comparativa final en tabla\n",
+    "df_comparacion = pd.DataFrame([\n",
+    "    {\n",
+    "        \"Método\": \"KNNImputer (k=3)\",\n",
+    "        \"RMSE\": df_eval_knn.loc[df_eval_knn[\"n_neighbors (k)\"] == 3, \"RMSE\"].values[0],\n",
+    "        \"MAE\": df_eval_knn.loc[df_eval_knn[\"n_neighbors (k)\"] == 3, \"MAE\"].values[0]\n",
+    "    },\n",
+    "    {\n",
+    "        \"Método\": \"KNNImputer k = 15\",\n",
+    "        \"RMSE\": df_eval_knn.loc[df_eval_knn[\"n_neighbors (k)\"] == 15, \"RMSE\"].values[0],\n",
+    "        \"MAE\": df_eval_knn.loc[df_eval_knn[\"n_neighbors (k)\"] == 15, \"MAE\"].values[0]\n",
+    "    },\n",
+    "    {\n",
+    "        \"Método\": \"IterativeImputer\",\n",
+    "        \"RMSE\": round(rmse_iter, 5),\n",
+    "        \"MAE\": round(mae_iter, 5)\n",
+    "    }\n",
+    "])\n",
+    "\n",
+    "print(\"COMPARACIÓN FINAL DE RENDIMIENTO\")\n",
+    "print(df_comparacion.to_string(index=False))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9b7cfe1e",
+   "metadata": {},
+   "source": [
+    "## Conclusion de la comparación\n",
+    "\n",
+    "* Superioridad de IterativeImputer: >    *IterativeImputer* obtiene un menor error de reconstrucción ($\\text{RMSE} \\approx 0.0296$ frente a $\\approx 0.0346$ del mejor KNN). Esto ocurre porque el dataset de Diabetes tiene correlaciones lineales significativas entre sus variables clínicas (especialmente entre las mediciones de suero sanguíneo s1 a s6), las cuales son capturadas de forma más efectiva por modelos de regresión lineal bayesiana que por la simple proximidad euclidiana local de vecinos.\n",
+    "\n",
+    "* Complejidad y supuestos: >    *KNNImputer* no asume una relación funcional (lineal) entre variables, pero su costo computacional crece cuadráticamente con el número de filas al requerir el cálculo de matrices de distancias por pares.\n",
+    "    * IterativeImputer aprovecha la estructura de covarianza multivariada global del conjunto de datos mediante rondas progresivas, resultando especialmente preciso en datos continuos estandarizados."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": ".venv (3.14.2)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.14.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+
+======================================================================
+ARCHIVO: .\Actividad7_Generación_Enriquecimiento_Datos.ipynb
+======================================================================
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "b1396f2f",
+   "metadata": {},
+   "source": [
+    "\n",
+    "\n",
+    "<div style=\"background: linear-gradient(120deg, #1ca9c9 0%, #40c4d6 60%, #7fe0e0 100%); padding: 28px 36px; border-radius: 14px; display: flex; align-items: center; gap: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.18);\">\n",
+    "    <img src='Figures/iteso.jpg' style=\"height: 110px; border-radius: 8px; background: white; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);\"/>\n",
+    "    <div style=\"border-left: 2px solid rgba(255,255,255,0.4); padding-left: 28px;\">\n",
+    "        <h1 style=\"margin: 0 0 8px 0; color: white; font-size: 1.5em; line-height: 1.3;\">Actividad 7: Generación y enriquecimiento de datos</h1>\n",
+    "        <h3 style=\"margin: 0; color: rgba(255,255,255,0.8); font-weight: normal; font-size: 1.05em;\">Laboratorio de Procesamiento de Datos</h3>\n",
+    "    </div>\n",
+    "</div>\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "135a9969",
+   "metadata": {},
+   "source": [
+    "Esta actividad consiste en crear variables útiles, generar tablas de análisis y agregar información de otra fuente mediante una clave común. El objetivo no es crear columnas por crear, sino explicar qué información aportan, cómo se calculan y qué limitaciones tienen. Trabaja con las operaciones de pandas estudiadas en clase: cálculos entre columnas, agrupación en intervalos, `groupby`, `agg` y `merge`.\n",
+    "\n",
+    "## Indicaciones generales\n",
+    "\n",
+    "1. Consulta el cuaderno 3.4 como referencia y reutiliza únicamente las celdas necesarias para preparar cada ejercicio. Explica con tus palabras los cambios que realices.\n",
+    "2. Carga los archivos desde la carpeta local `Data` mediante `os.path.join`.\n",
+    "3. Usa estos archivos: `penguins.csv`, `hour.csv`, `banco_mundial_paises.json`, `banco_mundial_poblacion_2023.json` y `banco_mundial_pib_per_capita_2023.json`.\n",
+    "4. Conserva los datos originales y utiliza copias para las modificaciones. No sobrescribas los archivos de `Data`.\n",
+    "5. Presenta cada resultado con una tabla breve y una explicación en una celda Markdown. Evita mostrar el dataset completo si bastan algunas filas o un resumen.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cfc7ec84-870c-43b7-96e5-910b34f3bcd6",
+   "metadata": {},
+   "source": [
+    "## 1. Palmer Penguins: crear una variable con un propósito\n",
+    "\n",
+    "**¿Qué información adicional podría facilitar la lectura de un reporte sobre los pingüinos observados?**\n",
+    "\n",
+    "1. Carga `penguins.csv` e identifica las columnas que necesitas para tu propuesta. Revisa si contienen valores faltantes.\n",
+    "2. Propón e implementa **una variable derivada distinta de las ya creadas en 3.4**. Puede ser un cálculo o una categoría, pero debe responder a una pregunta concreta. Si eliges categorías, justifica los límites.\n",
+    "3. Documenta la variable y muestra las columnas originales junto con la nueva en una tabla de hasta 10 filas.\n",
+    "4. Verifica manualmente el resultado de una fila y reporta cuántos valores faltantes tiene la nueva columna. \n",
+    "5. Explica en 3 a 5 líneas qué aporta la variable.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "501a8787-87dd-44fc-873b-7f16f4e42b23",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Desarrolla el apartado 1. Agrega las celdas que necesites."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "actividad7-apartado-b",
+   "metadata": {},
+   "source": [
+    "## 2. Bike Sharing: enriquecer y comparar registros de alquiler\n",
+    "\n",
+    "**¿cómo cambian los resúmenes de demanda cuando modificamos las variables o las reglas de agrupación?**\n",
+    "\n",
+    "Carga `hour.csv` y recupera del cuaderno 3.6 las transformaciones necesarias para construir `periodo_dia`, `estacion_nombre` y `clima_nombre`. Consulta la documentación local `bike_sharing_Readme.txt` cuando necesites verificar el significado de una columna.\n",
+    "\n",
+    "### 2.1 Modificar los periodos del día\n",
+    "\n",
+    "1. Construye la versión original de `demanda_por_periodo`, tal como se trabajó en 3.6, para usarla como referencia.\n",
+    "2. Define una **segunda agrupación horaria**, diferente de la original. Indica los límites, las etiquetas y qué extremos incluye cada intervalo. Los grupos deben cubrir las horas de 0 a 23 sin solapamientos ni horas sin asignar.\n",
+    "3. Genera la nueva tabla con el promedio de alquileres y el número de registros horarios por grupo, conservando la separación entre fin de semana y entre semana.\n",
+    "4. Compara ambas tablas y explica al menos dos cambios observados. Considera que los nuevos grupos pueden tener duraciones distintas.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e447bdf1-874e-4e40-9eb4-72b9b2214dc5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Desarrolla el apartado 2.1"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0ca79c02-4612-447c-bc63-adf72f8cf144",
+   "metadata": {},
+   "source": [
+    "### 2.2 Comparar usuarios casuales y registrados\n",
+    "\n",
+    "1. Construye `demanda_por_hora` con los promedios de `casual` y `registered` para cada hora.\n",
+    "2. Calcula la **diferencia absoluta entre ambos promedios**, ordena de mayor a menor y muestra las tres horas con mayor diferencia. Si hay empates en el tercer lugar, indícalos.\n",
+    "3. Interpreta el resultado en 3 a 5 líneas. Aclara que cada fila original representa un registro horario y que el conteo de alquileres no equivale necesariamente a personas únicas.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "actividad7-codigo-b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Desarrolla el apartado 2.2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "86524717-9230-49fd-8d34-2f6259547851",
+   "metadata": {},
+   "source": [
+    "### 2.3 Resumir por estación del año y clima\n",
+    "\n",
+    "1. Genera una tabla por `estacion_nombre` y `clima_nombre` con el promedio de `cnt` y el número de observaciones de cada combinación presente.\n",
+    "2. Identifica una combinación con pocas observaciones respecto de las demás y explica por qué conviene interpretar su promedio con cautela.\n",
+    "3. Describe dos resultados de la tabla sin afirmar que el clima o la estación causan por sí solos las diferencias observadas.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3249f813-1254-409d-8830-fea24197b1ee",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Desarrolla el apartado 2.3"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3445bd44-2299-4358-81a4-04c13e3cab4b",
+   "metadata": {},
+   "source": [
+    "### 2.4 Proponer una variable adicional\n",
+    "\n",
+    "Diseña e implementa **una variable nueva que no se haya creado en 3.6** y que ayude a describir la operación del servicio. Documenta su propósito, fórmula o regla, unidades y una limitación. Muestra un ejemplo y verifica su resultado. Si la fórmula incluye una división, explica qué haces cuando el denominador es cero.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5dbabf13-e7bb-4a33-8384-e2148f8d8bb2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Desarrolla el apartado 2.4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "actividad7-codigo-c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Desarrolla los apartados C.1 y C.2 sin modificar compras_demo."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "af6523fe-0b6a-47e8-bfb1-d7ea3c3a118a",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
