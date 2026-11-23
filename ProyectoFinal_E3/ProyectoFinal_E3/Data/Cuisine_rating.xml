@@ -1,0 +1,3603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <record>
+    <field name="User ID">1</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">2</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1991</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">3</field>
+    <field name="Area code">122</field>
+    <field name="Location" />
+    <field name="Gender">Male</field>
+    <field name="YOB">1977</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">4</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1956</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">5</field>
+    <field name="Area code" />
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1997</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">6</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1995</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol " />
+    <field name="Smoker" />
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">7</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1977</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">8</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2003</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">9</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1965</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">10</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1995</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">11</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1975</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">12</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1963</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">13</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">14</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1980</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">15</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1956</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">16</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1956</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">17</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2007</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">18</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2004</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">19</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">20</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">21</field>
+    <field name="Area code">123</field>
+    <field name="Location" />
+    <field name="Gender">Female</field>
+    <field name="YOB">2009</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">22</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1983</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">23</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1971</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget" />
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">24</field>
+    <field name="Area code" />
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">25</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1963</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">26</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1969</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">27</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">28</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status" />
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">29</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1977</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">30</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1988</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">31</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1999</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget" />
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">32</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, MY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1971</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">33</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1995</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">34</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2009</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">35</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">36</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">37</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol " />
+    <field name="Smoker" />
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">38</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1990</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">39</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1987</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">40</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1986</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">41</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">2</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">42</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1967</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">43</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget" />
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">44</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">45</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1969</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">46</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1976</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">47</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1976</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">48</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1987</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">49</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">50</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">51</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2007</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity" />
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">52</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2005</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">53</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">54</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1989</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">55</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1958</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">56</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1991</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">57</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1981</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">2</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">58</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">59</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1964</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">60</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1959</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">61</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2003</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">62</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1955</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">63</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2002</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">64</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1989</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">65</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1996</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">66</field>
+    <field name="Area code" />
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1975</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">67</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2009</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">68</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">69</field>
+    <field name="Area code" />
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1961</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">70</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">71</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1957</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">72</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity" />
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">73</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1962</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">74</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1994</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">75</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2002</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">76</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1955</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">77</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1974</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">78</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1979</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">79</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">80</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB" />
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">81</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">82</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1964</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">83</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1996</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">84</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1981</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">85</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1978</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">86</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1999</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">87</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1961</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">88</field>
+    <field name="Area code" />
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2007</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">89</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">90</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1988</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">91</field>
+    <field name="Area code">154</field>
+    <field name="Location">Cedar Hill, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1960</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">92</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1969</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">93</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">94</field>
+    <field name="Area code">107</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1985</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">95</field>
+    <field name="Area code">111</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">96</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1982</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">97</field>
+    <field name="Area code">122</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">98</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">99</field>
+    <field name="Area code">123</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2002</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">100</field>
+    <field name="Area code">153</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2005</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">101</field>
+    <field name="Area code">117</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">102</field>
+    <field name="Area code">192</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget">4</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">103</field>
+    <field name="Area code">137</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1977</field>
+    <field name="Marital Status" />
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">104</field>
+    <field name="Area code">121</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1956</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">105</field>
+    <field name="Area code">198</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1997</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">106</field>
+    <field name="Area code">172</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1995</field>
+    <field name="Marital Status" />
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">107</field>
+    <field name="Area code" />
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1977</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">108</field>
+    <field name="Area code">166</field>
+    <field name="Location" />
+    <field name="Gender">Female</field>
+    <field name="YOB">2003</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">109</field>
+    <field name="Area code">124</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1965</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">110</field>
+    <field name="Area code">129</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1995</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">111</field>
+    <field name="Area code">131</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1975</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget" />
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">112</field>
+    <field name="Area code">149</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1963</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">113</field>
+    <field name="Area code">101</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">114</field>
+    <field name="Area code">104</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1980</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget" />
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">115</field>
+    <field name="Area code">140</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1956</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">116</field>
+    <field name="Area code">145</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1956</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker" />
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">117</field>
+    <field name="Area code">159</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2007</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">118</field>
+    <field name="Area code">195</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2004</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">119</field>
+    <field name="Area code">105</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker" />
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">120</field>
+    <field name="Area code">198</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1959</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">121</field>
+    <field name="Area code">130</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2009</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">122</field>
+    <field name="Area code">139</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1983</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">123</field>
+    <field name="Area code">111</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1971</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">124</field>
+    <field name="Area code">113</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">125</field>
+    <field name="Area code">123</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1963</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">126</field>
+    <field name="Area code">127</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1969</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">127</field>
+    <field name="Area code">134</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">128</field>
+    <field name="Area code">148</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">129</field>
+    <field name="Area code">154</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1977</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">130</field>
+    <field name="Area code">158</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1988</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget">5</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">131</field>
+    <field name="Area code">159</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1999</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">132</field>
+    <field name="Area code">159</field>
+    <field name="Location">Market City, MY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1971</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">133</field>
+    <field name="Area code">161</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1995</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">134</field>
+    <field name="Area code">167</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2009</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity" />
+    <field name="Budget">5</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">135</field>
+    <field name="Area code">172</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">136</field>
+    <field name="Area code">176</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">137</field>
+    <field name="Area code">110</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2006</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">138</field>
+    <field name="Area code">120</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB" />
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">139</field>
+    <field name="Area code">131</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1987</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">140</field>
+    <field name="Area code">137</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1986</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">141</field>
+    <field name="Area code">142</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2001</field>
+    <field name="Marital Status" />
+    <field name="Activity">Student</field>
+    <field name="Budget">2</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">142</field>
+    <field name="Area code">162</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1967</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">143</field>
+    <field name="Area code" />
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1985</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">144</field>
+    <field name="Area code">184</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">145</field>
+    <field name="Area code">199</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1969</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">146</field>
+    <field name="Area code">102</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1976</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">147</field>
+    <field name="Area code">106</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1976</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">148</field>
+    <field name="Area code">113</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1987</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">149</field>
+    <field name="Area code">142</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">150</field>
+    <field name="Area code">157</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">151</field>
+    <field name="Area code">185</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2007</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">152</field>
+    <field name="Area code">147</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2005</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">153</field>
+    <field name="Area code">183</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">154</field>
+    <field name="Area code">138</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1989</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">155</field>
+    <field name="Area code">136</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1958</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">156</field>
+    <field name="Area code">169</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1991</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">157</field>
+    <field name="Area code">176</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1981</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">2</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">158</field>
+    <field name="Area code">196</field>
+    <field name="Location">Central Park,ny</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1962</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">159</field>
+    <field name="Area code" />
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1964</field>
+    <field name="Marital Status" />
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">160</field>
+    <field name="Area code">135</field>
+    <field name="Location" />
+    <field name="Gender">Male</field>
+    <field name="YOB">1959</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">161</field>
+    <field name="Area code">124</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2003</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines" />
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">162</field>
+    <field name="Area code">125</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1955</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">163</field>
+    <field name="Area code">158</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2002</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">164</field>
+    <field name="Area code">186</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1989</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">165</field>
+    <field name="Area code">176</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1996</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">166</field>
+    <field name="Area code">194</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1975</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget" />
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">167</field>
+    <field name="Area code">173</field>
+    <field name="Location" />
+    <field name="Gender">Male</field>
+    <field name="YOB">2009</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">168</field>
+    <field name="Area code">182</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">169</field>
+    <field name="Area code">196</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1961</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">170</field>
+    <field name="Area code">197</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Italian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">171</field>
+    <field name="Area code">176</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1957</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">172</field>
+    <field name="Area code">169</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Single</field>
+    <field name="Activity" />
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S" />
+  </record>
+  
+  <record>
+    <field name="User ID">173</field>
+    <field name="Area code">184</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1962</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">1</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">174</field>
+    <field name="Area code">192</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1994</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">175</field>
+    <field name="Area code">135</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2002</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating" />
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">176</field>
+    <field name="Area code">186</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1955</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">3</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">177</field>
+    <field name="Area code">175</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget" />
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">178</field>
+    <field name="Area code">179</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1979</field>
+    <field name="Marital Status" />
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">179</field>
+    <field name="Area code">149</field>
+    <field name="Location" />
+    <field name="Gender">Male</field>
+    <field name="YOB">1965</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Seafood</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">180</field>
+    <field name="Area code">139</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1998</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">1</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">181</field>
+    <field name="Area code">163</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1974</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">182</field>
+    <field name="Area code">162</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1964</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">4</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">183</field>
+    <field name="Area code" />
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1996</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity" />
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating" />
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">184</field>
+    <field name="Area code">166</field>
+    <field name="Location">Market City, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1981</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">4.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">185</field>
+    <field name="Area code">158</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender" />
+    <field name="YOB">1978</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">186</field>
+    <field name="Area code">136</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1999</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">4</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">187</field>
+    <field name="Area code">186</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1961</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">188</field>
+    <field name="Area code">137</field>
+    <field name="Location">Central Park,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2007</field>
+    <field name="Marital Status" />
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">189</field>
+    <field name="Area code">154</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2003</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">190</field>
+    <field name="Area code">167</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1988</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">191</field>
+    <field name="Area code">185</field>
+    <field name="Location">Cedar Hill, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1960</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Indian</field>
+    <field name="Alcohol ">Socially</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">192</field>
+    <field name="Area code">178</field>
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">1969</field>
+    <field name="Marital Status">Divorced</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">1</field>
+    <field name="Overall Rating">2</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">193</field>
+    <field name="Area code">105</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">194</field>
+    <field name="Area code">103</field>
+    <field name="Location">Riverdale,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">4</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">195</field>
+    <field name="Area code" />
+    <field name="Location">China Town, NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB" />
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget" />
+    <field name="Cuisines" />
+    <field name="Alcohol ">Often</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">2</field>
+    <field name="Service Rating">5</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">Yes</field>
+  </record>
+  
+  <record>
+    <field name="User ID">196</field>
+    <field name="Area code">175</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">1982</field>
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">French</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">197</field>
+    <field name="Area code">170</field>
+    <field name="Location">Upper West Side,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB">2000</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">4</field>
+    <field name="Cuisines">Chinese</field>
+    <field name="Alcohol " />
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">1</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">1.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">198</field>
+    <field name="Area code">160</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Female</field>
+    <field name="YOB" />
+    <field name="Marital Status">Single</field>
+    <field name="Activity">Professional</field>
+    <field name="Budget">5</field>
+    <field name="Cuisines">Japanese</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Often</field>
+    <field name="Food Rating">5</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">3.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">199</field>
+    <field name="Area code">130</field>
+    <field name="Location">St. George,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2002</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget">3</field>
+    <field name="Cuisines">Filipino</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Socially</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+  
+  <record>
+    <field name="User ID">200</field>
+    <field name="Area code">140</field>
+    <field name="Location">Upper East Side,NY</field>
+    <field name="Gender">Male</field>
+    <field name="YOB">2005</field>
+    <field name="Marital Status">Married</field>
+    <field name="Activity">Student</field>
+    <field name="Budget" />
+    <field name="Cuisines">French</field>
+    <field name="Alcohol ">Never</field>
+    <field name="Smoker">Never</field>
+    <field name="Food Rating">3</field>
+    <field name="Service Rating">2</field>
+    <field name="Overall Rating">2.5</field>
+    <field name="Often A S">No</field>
+  </record>
+
+</dataset>
